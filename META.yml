@@ -1,12 +1,88 @@
 ---
-name: Devel-ebug
-version: 0.49
+abstract: 'A simple, extensible Perl debugger'
 author:
   - 'Leon Brocard, C<< <acme@astray.com> >>'
-abstract: 'A simple, extensible Perl debugger'
+build_requires:
+  YAML: 0
+configure_requires:
+  Module::Build: 0.38
+dynamic_config: 1
+generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.112150'
 license: perl
-resources:
-  license: http://dev.perl.org/licenses/
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Devel-ebug
+provides:
+  DB::fake:
+    file: lib/Devel/ebug/Backend.pm
+    version: 0
+  Devel::ebug:
+    file: lib/Devel/ebug.pm
+    version: 0.50
+  Devel::ebug::Backend::Plugin::ActionPoints:
+    file: lib/Devel/ebug/Backend/Plugin/ActionPoints.pm
+    version: 0
+  Devel::ebug::Backend::Plugin::Basic:
+    file: lib/Devel/ebug/Backend/Plugin/Basic.pm
+    version: 0
+  Devel::ebug::Backend::Plugin::Codelines:
+    file: lib/Devel/ebug/Backend/Plugin/Codelines.pm
+    version: 0
+  Devel::ebug::Backend::Plugin::Commands:
+    file: lib/Devel/ebug/Backend/Plugin/Commands.pm
+    version: 0
+  Devel::ebug::Backend::Plugin::Eval:
+    file: lib/Devel/ebug/Backend/Plugin/Eval.pm
+    version: 0
+  Devel::ebug::Backend::Plugin::Filenames:
+    file: lib/Devel/ebug/Backend/Plugin/Filenames.pm
+    version: 0
+  Devel::ebug::Backend::Plugin::Output:
+    file: lib/Devel/ebug/Backend/Plugin/Output.pm
+    version: 0
+  Devel::ebug::Backend::Plugin::Pad:
+    file: lib/Devel/ebug/Backend/Plugin/Pad.pm
+    version: 0
+  Devel::ebug::Backend::Plugin::Ping:
+    file: lib/Devel/ebug/Backend/Plugin/Ping.pm
+    version: 0
+  Devel::ebug::Backend::Plugin::Run:
+    file: lib/Devel/ebug/Backend/Plugin/Run.pm
+    version: 0
+  Devel::ebug::Backend::Plugin::StackTrace:
+    file: lib/Devel/ebug/Backend/Plugin/StackTrace.pm
+    version: 0
+  Devel::ebug::Console:
+    file: lib/Devel/ebug/Console.pm
+    version: 0
+  Devel::ebug::Plugin::ActionPoints:
+    file: lib/Devel/ebug/Plugin/ActionPoints.pm
+    version: 0
+  Devel::ebug::Plugin::Basic:
+    file: lib/Devel/ebug/Plugin/Basic.pm
+    version: 0
+  Devel::ebug::Plugin::Codelines:
+    file: lib/Devel/ebug/Plugin/Codelines.pm
+    version: 0
+  Devel::ebug::Plugin::Eval:
+    file: lib/Devel/ebug/Plugin/Eval.pm
+    version: 0
+  Devel::ebug::Plugin::Filenames:
+    file: lib/Devel/ebug/Plugin/Filenames.pm
+    version: 0
+  Devel::ebug::Plugin::Output:
+    file: lib/Devel/ebug/Plugin/Output.pm
+    version: 0
+  Devel::ebug::Plugin::Pad:
+    file: lib/Devel/ebug/Plugin/Pad.pm
+    version: 0
+  Devel::ebug::Plugin::Run:
+    file: lib/Devel/ebug/Plugin/Run.pm
+    version: 0
+  Devel::ebug::Plugin::StackTrace:
+    file: lib/Devel/ebug/Plugin/StackTrace.pm
+    version: 0
 requires:
   Carp: 0
   Class::Accessor::Chained::Fast: 0
@@ -21,58 +97,6 @@ requires:
   Test::Expect: 0
   Test::More: 0
   YAML::Syck: 0.85
-provides:
-  DB:
-    file: lib/Devel/ebug/Backend.pm
-    version: 0.49
-  DB::fake:
-    file: lib/Devel/ebug/Backend.pm
-  Devel::ebug:
-    file: lib/Devel/ebug.pm
-    version: 0.49
-  Devel::ebug::Backend::Plugin::ActionPoints:
-    file: lib/Devel/ebug/Backend/Plugin/ActionPoints.pm
-  Devel::ebug::Backend::Plugin::Basic:
-    file: lib/Devel/ebug/Backend/Plugin/Basic.pm
-  Devel::ebug::Backend::Plugin::Codelines:
-    file: lib/Devel/ebug/Backend/Plugin/Codelines.pm
-  Devel::ebug::Backend::Plugin::Commands:
-    file: lib/Devel/ebug/Backend/Plugin/Commands.pm
-  Devel::ebug::Backend::Plugin::Eval:
-    file: lib/Devel/ebug/Backend/Plugin/Eval.pm
-  Devel::ebug::Backend::Plugin::Filenames:
-    file: lib/Devel/ebug/Backend/Plugin/Filenames.pm
-  Devel::ebug::Backend::Plugin::Output:
-    file: lib/Devel/ebug/Backend/Plugin/Output.pm
-  Devel::ebug::Backend::Plugin::Pad:
-    file: lib/Devel/ebug/Backend/Plugin/Pad.pm
-  Devel::ebug::Backend::Plugin::Ping:
-    file: lib/Devel/ebug/Backend/Plugin/Ping.pm
-  Devel::ebug::Backend::Plugin::Run:
-    file: lib/Devel/ebug/Backend/Plugin/Run.pm
-  Devel::ebug::Backend::Plugin::StackTrace:
-    file: lib/Devel/ebug/Backend/Plugin/StackTrace.pm
-  Devel::ebug::Console:
-    file: lib/Devel/ebug/Console.pm
-  Devel::ebug::Plugin::ActionPoints:
-    file: lib/Devel/ebug/Plugin/ActionPoints.pm
-  Devel::ebug::Plugin::Basic:
-    file: lib/Devel/ebug/Plugin/Basic.pm
-  Devel::ebug::Plugin::Codelines:
-    file: lib/Devel/ebug/Plugin/Codelines.pm
-  Devel::ebug::Plugin::Eval:
-    file: lib/Devel/ebug/Plugin/Eval.pm
-  Devel::ebug::Plugin::Filenames:
-    file: lib/Devel/ebug/Plugin/Filenames.pm
-  Devel::ebug::Plugin::Output:
-    file: lib/Devel/ebug/Plugin/Output.pm
-  Devel::ebug::Plugin::Pad:
-    file: lib/Devel/ebug/Plugin/Pad.pm
-  Devel::ebug::Plugin::Run:
-    file: lib/Devel/ebug/Plugin/Run.pm
-  Devel::ebug::Plugin::StackTrace:
-    file: lib/Devel/ebug/Plugin/StackTrace.pm
-generated_by: Module::Build version 0.280801
-meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.50
