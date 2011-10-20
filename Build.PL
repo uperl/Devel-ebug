@@ -18,6 +18,10 @@ my $requires = {
   'YAML::Syck'           => '0.85',
 };
 
+my $build_requires = {
+  'YAML' => '0',
+};
+
 
 # Test::Expect doesn't run under Windows atm
 if ($^O !~ /mswin32/i) {
@@ -29,6 +33,8 @@ my $build = Module::Build->new(
   license            => 'perl',
   module_name        => 'Devel::ebug',
   requires           => $requires,
+  build_requires     => $build_requires,
   script_files       => ['ebug', 'ebug_client', 'ebug_server'],
 );
 $build->create_build_script;
+
