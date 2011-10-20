@@ -9,7 +9,7 @@ eval "use Test::Expect";
 plan skip_all => "Test::Expect required for testing ebug: $@" if $@;
 eval "use Expect::Simple";
 plan skip_all => "Expect::Simple required for testing ebug: $@" if $@;
-plan tests => 15;
+plan tests => 17;
 
 expect_run(
   command => "PERL_RL=\"o=0\" $^X ebug t/calc.pl",
@@ -19,8 +19,8 @@ expect_run(
 
 my $version = $Devel::ebug::VERSION;
 
-expect_like(qr/Welcome to Devel::ebug $version/);
-expect_like(qr{main\(t/calc.pl#3\):\nmy \$q = 1;});
+expect_like(qr/Welcome to Devel::ebug $version/, 'Got welcome');
+expect_like(qr{main\(t/calc.pl#3\):\nmy \$q = 1;}, 'Got initial lines');
 expect("h", 'Commands:
 
       b Set break point at a line number (eg: b 6, b code.pl 6, b code.pl 6 $x > 7,
@@ -43,11 +43,14 @@ restart Restart the program
       x Dump a variable using YAML (eg: x $object)
       q Quit
 main(t/calc.pl#3):
-my $q = 1;');
+my $q = 1;', 'Got help');
 
-expect("b 9", "main(t/calc.pl#3):\nmy \$q = 1;");
-expect("s", "main(t/calc.pl#4):\nmy \$w = 2;");
-expect("", "main(t/calc.pl#5):\nmy \$e = add(\$q, \$w);");
-expect("n", "main(t/calc.pl#6):\n\$e++;");
-expect("r", qq{main(t/calc.pl#9):\nprint "\$e\\n";});
+expect("b 9", "main(t/calc.pl#3):\nmy \$q = 1;", 'set breakpoint');
+expect("s", "main(t/calc.pl#4):\nmy \$w = 2;", 'step');
+expect("", "main(t/calc.pl#5):\nmy \$e = add(\$q, \$w);", 'step again');
+expect("n", "main(t/calc.pl#6):\n\$e++;", 'next');
+expect("r", qq{main(t/calc.pl#9):\nprint "\$e\\n";}, 'run');
+expect("r", qq{}, 'run to end');
+# expect("r", qq{Program finished. Enter 'restart' or 'q'}, 'run to end');
+# expect("q", qq{});
 
