@@ -83,5 +83,5 @@ is($pad->{'$first'}, '{...}');
 
 $ebug->run;
 $pad = $ebug->pad_human;
-is($pad->{'$first'}, '"$koremutake"');
+is($pad->{'$first'}, '$koremutake');
 
