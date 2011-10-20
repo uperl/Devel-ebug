@@ -23,7 +23,7 @@ my $trace = $trace[0];
 is($trace->package   , "main");
 is($trace->filename  , "t/calc.pl");
 is($trace->subroutine, "main::add");
-is($trace->wantarray , 0);
+is($trace->wantarray , '');
 is($trace->line      , 5);
 is_deeply([$trace->args], [1, 2]);
 
