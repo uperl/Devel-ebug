@@ -4,6 +4,7 @@ use warnings;
 use lib 'lib';
 use Test::More tests => 29;
 use Devel::ebug;
+use File::Spec;
 
 my $ebug = Devel::ebug->new;
 $ebug->program("t/calc.pl");
@@ -21,7 +22,7 @@ is(scalar(@trace), 1);
 
 my $trace = $trace[0];
 is($trace->package   , "main");
-is($trace->filename  , "t/calc.pl");
+is($trace->filename , File::Spec->catfile('t','calc.pl'), "trace is on correct file name");
 is($trace->subroutine, "main::add");
 is($trace->wantarray , '');
 is($trace->line      , 5);
