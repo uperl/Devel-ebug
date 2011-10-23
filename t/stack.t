@@ -24,7 +24,7 @@ my $trace = $trace[0];
 is($trace->package   , "main");
 is($trace->filename , File::Spec->catfile('t','calc.pl'), "trace is on correct file name");
 is($trace->subroutine, "main::add");
-is($trace->wantarray , '');
+ok(! $trace->wantarray ); # Forced boolean context
 is($trace->line      , 5);
 is_deeply([$trace->args], [1, 2]);
 
