@@ -43,30 +43,42 @@ sub load {
   $self->proc($proc);
   $ENV{SECRET} = "";
 
-  # try and connect to the server
-  my $socket;
-  foreach (1..10) {
-    $socket = IO::Socket::INET->new(
-      PeerAddr => "localhost",
-      PeerPort => $port,
-      Proto    => 'tcp',
-      Reuse      => 1,
-      ReuserAddr => 1,
+  $self->attach($port, $secret);
+}
+
+sub attach {
+    my ($self, $port, $key) = @_;
+
+    # import all the plugins into our namespace
+    do { eval "use $_ " } for $self->plugins;
+
+    # try and connect to the server
+    my $socket;
+    foreach ( 1 .. 10 ) {
+        $socket = IO::Socket::INET->new(
+            PeerAddr   => "localhost",
+            PeerPort   => $port,
+            Proto      => 'tcp',
+            Reuse      => 1,
+            ReuserAddr => 1,
+        );
+        last if $socket;
+        sleep 1;
+    }
+    die "Could not connect: $!" unless $socket;
+    $self->socket($socket);
+
+    my $response = $self->talk(
+        {   command => "ping",
+            version => $VERSION,
+            secret  => $key,
+        }
     );
-    last if $socket;
-    sleep 1;
-  }
-  die "Could not connect: $!" unless $socket;
-  $self->socket($socket);
- 
-  my $response = $self->talk({
-    command => "ping",
-    version => $VERSION,
-    secret  => $secret,
-  });
-  my $version = $response->{version};
-  die "Client version $version != our version $VERSION" unless $version eq $VERSION;
-  $self->basic; # get basic information for the first line
+    my $version = $response->{version};
+    die "Client version $version != our version $VERSION"
+        unless $version eq $VERSION;
+
+    $self->basic;    # get basic information for the first line
 }
 
 #

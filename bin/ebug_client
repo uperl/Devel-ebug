@@ -56,46 +56,10 @@ use warnings;
 our $VERSION = $Devel::ebug::VERSION;
 our $ARG     = {};
 
-*load = *attach;
-
-sub attach {
+# Replace 'load' with one that just attaches
+sub load {
     my $self    = shift;
-    my $program = $self->program;
-
-    # just to see if my "load" is in control instead of Devel::ebug::load
-    print STDERR "Attaching to $program...\n";
-
-    # import all the plugins into our namespace
-    do { eval "use $_ " }
-        for $self->plugins;
-
-    # try and connect to the server
-    my $socket;
-    foreach ( 1 .. 10 ) {
-        $socket = IO::Socket::INET->new(
-            PeerAddr   => "localhost",
-            PeerPort   => $ARG->{port},
-            Proto      => 'tcp',
-            Reuse      => 1,
-            ReuserAddr => 1,
-        );
-        last if $socket;
-        sleep 1;
-    }
-    die "Could not connect: $!" unless $socket;
-    $self->socket($socket);
-
-    my $response = $self->talk(
-        {   command => "ping",
-            version => $VERSION,
-            secret  => $ARG->{key},
-        }
-    );
-    my $version = $response->{version};
-    die "Client version $version != our version $VERSION"
-        unless $version eq $VERSION;
-
-    $self->basic;    # get basic information for the first line
+    $self->attach($ARG->{port}, $ARG->{key});
 }
 
 package main;
