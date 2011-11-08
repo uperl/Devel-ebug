@@ -12,7 +12,7 @@ plan skip_all => "Expect::Simple required for testing ebug: $@" if $@;
 plan tests => 17;
 
 expect_run(
-  command => "PERL_RL=\"o=0\" $^X ebug t/calc.pl",
+  command => "PERL_RL=\"o=0\" $^X bin/ebug t/calc.pl",
   prompt  => 'ebug: ',
   quit    => 'q',
 );
