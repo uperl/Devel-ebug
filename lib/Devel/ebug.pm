@@ -12,10 +12,11 @@ use Module::Pluggable require => 1;
 
 use base qw(Class::Accessor::Chained::Fast);
 __PACKAGE__->mk_accessors(qw(
+    port
     program socket proc
     package filename line codeline subroutine finished));
 
-our $VERSION = "0.50";
+our $VERSION = "0.51";
 
 # let's run the code under our debugger and connect to the server it
 # starts up
@@ -496,11 +497,14 @@ Devel::ebug does not handle signals under Windows.
 
 =head1 AUTHOR
 
+Latest releases by Brock Wilcox, C<< <awwaiid@thelackthereof.org> >>
+
 Leon Brocard, C<< <acme@astray.com> >>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2005-8, Leon Brocard
+Copyright (C) 2005-2008, Leon Brocard
+Copyright (C) 2011, Brock Wilcox
 
 =head1 LICENSE
 

@@ -1,6 +1,7 @@
 ---
 abstract: 'A simple, extensible Perl debugger'
 author:
+  - 'Latest releases by Brock Wilcox, C<< <awwaiid@thelackthereof.org> >>'
   - 'Leon Brocard, C<< <acme@astray.com> >>'
 build_requires:
   YAML: 0
@@ -19,7 +20,7 @@ provides:
     version: 0
   Devel::ebug:
     file: lib/Devel/ebug.pm
-    version: 0.50
+    version: 0.51
   Devel::ebug::Backend::Plugin::ActionPoints:
     file: lib/Devel/ebug/Backend/Plugin/ActionPoints.pm
     version: 0
@@ -99,4 +100,4 @@ requires:
   YAML::Syck: 0.85
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.50
+version: 0.51_01
