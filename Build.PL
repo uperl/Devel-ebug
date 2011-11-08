@@ -34,7 +34,7 @@ my $build = Module::Build->new(
   module_name        => 'Devel::ebug',
   requires           => $requires,
   build_requires     => $build_requires,
-  script_files       => ['bin/ebug', 'bin/ebug_client', 'bin/ebug_server'],
+  script_files       => ['bin/ebug', 'bin/ebug_client', 'bin/ebug_server', 'bin/ebug_backend_perl'],
 );
 $build->create_build_script;
 

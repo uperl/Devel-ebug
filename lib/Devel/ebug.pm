@@ -12,6 +12,7 @@ use Module::Pluggable require => 1;
 
 use base qw(Class::Accessor::Chained::Fast);
 __PACKAGE__->mk_accessors(qw(
+    backend
     port
     program socket proc
     package filename line codeline subroutine finished));
@@ -33,8 +34,8 @@ sub load {
   my $port   = 3141 + ($rand % 1024);
 
   $ENV{SECRET} = $secret;
-  my $command = "$^X -Ilib -d:ebug::Backend $program";
-#  warn "Running: $command\n";
+  my $backend = $self->backend || "ebug_backend_perl";
+  my $command = "$backend $program";;
   my $proc = Proc::Background->new(
     {'die_upon_destroy' => 1},
     $command

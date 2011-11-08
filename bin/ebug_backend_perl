@@ -1,0 +1,6 @@
+#!perl
+use strict;
+use warnings;
+use lib 'lib';
+my $program = $ARGV[0];
+exec("$^X -Ilib -d:ebug::Backend $program");

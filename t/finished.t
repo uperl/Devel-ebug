@@ -7,6 +7,7 @@ use Devel::ebug;
 
 my $ebug = Devel::ebug->new;
 $ebug->program("t/yaml.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 
 is($ebug->finished, 0);
