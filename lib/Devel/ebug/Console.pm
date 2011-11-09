@@ -11,6 +11,7 @@ use base qw(Class::Accessor::Chained::Fast);
 
 sub run {
   my $self = shift;
+  my $backend = shift;
 
   my $filename = join "", @ARGV;
 
@@ -20,6 +21,7 @@ sub run {
 
   my $ebug = Devel::ebug->new;
   $ebug->program($filename);
+  $ebug->backend($backend);
   $ebug->load;
 
   my $codelines;

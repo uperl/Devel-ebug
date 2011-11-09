@@ -4,8 +4,14 @@ use warnings;
 use lib 'lib';
 use Devel::ebug::Console;
 
+my $backend;
+if ($ARGV[0] eq '--backend') {
+    $backend = $ARGV[1];
+    shift(@ARGV);
+    shift(@ARGV);
+}
 my $console = Devel::ebug::Console->new();
-$console->run();
+$console->run($backend);
 
 __END__
 

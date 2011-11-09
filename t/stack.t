@@ -8,6 +8,7 @@ use File::Spec;
 
 my $ebug = Devel::ebug->new;
 $ebug->program("t/calc.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 
 my @trace = $ebug->stack_trace;
@@ -34,6 +35,7 @@ is($trace[0], 'add(1, 2)');
 
 $ebug = Devel::ebug->new;
 $ebug->program("t/calc_oo.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 $ebug->break_point("t/Calc.pm", 19);
 
@@ -50,6 +52,7 @@ is($trace[0], '$self->fib1(14)');
 
 $ebug = Devel::ebug->new;
 $ebug->program("t/koremutake.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 
 $ebug->step;
@@ -59,6 +62,7 @@ is($trace[0], 'String::Koremutake->new()');
 
 $ebug = Devel::ebug->new;
 $ebug->program("t/koremutake.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 $ebug->break_point_subroutine("String::Koremutake::integer_to_koremutake");
 
@@ -69,6 +73,7 @@ is($trace[0], '$koremutake->integer_to_koremutake(65535)');
 
 $ebug = Devel::ebug->new;
 $ebug->program("t/stack.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 $ebug->break_point_subroutine("main::show");
 

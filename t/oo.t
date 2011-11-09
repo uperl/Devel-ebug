@@ -7,6 +7,7 @@ use Devel::ebug;
 
 my $ebug = Devel::ebug->new;
 $ebug->program("t/calc_oo.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 
 # Let's step through the program, and check that we step through the
@@ -27,6 +28,7 @@ $ebug->next;
 
 $ebug = Devel::ebug->new;
 $ebug->program("t/calc_oo.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 $ebug->break_point_subroutine("Calc::add");
 $ebug->run;

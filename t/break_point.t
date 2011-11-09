@@ -7,6 +7,7 @@ use Devel::ebug;
 
 my $ebug = Devel::ebug->new;
 $ebug->program("t/calc.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 
 # set break points at line numbers
@@ -28,6 +29,7 @@ $ebug->step;
 # set break point at add()
 $ebug = Devel::ebug->new;
 $ebug->program("t/calc.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 is( $ebug->break_point_subroutine("main::add"), 12 );
 $ebug->run;
@@ -36,6 +38,7 @@ is($ebug->line, 12);
 # set break point at fib2()
 $ebug = Devel::ebug->new;
 $ebug->program("t/calc_oo.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 $ebug->break_point("t/Calc.pm", 29);
 is_deeply([$ebug->break_points], []);
@@ -47,6 +50,7 @@ is($ebug->eval('$i'), 1);
 # set break point at add()
 $ebug = Devel::ebug->new;
 $ebug->program("t/calc.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 $ebug->break_point(6, '$e == 4');
 $ebug->break_point(7, '$e == 4');
@@ -57,6 +61,7 @@ is($ebug->eval('$e'), 4);
 # set break point at fib2()
 $ebug = Devel::ebug->new;
 $ebug->program("t/calc_oo.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 $ebug->break_point("t/Calc.pm", 29, '$i == 2');
 is_deeply([$ebug->break_points_with_condition], []);
@@ -76,6 +81,7 @@ is($ebug->eval('$x2'), 2);
 # set break points at line numbers and delete one
 $ebug = Devel::ebug->new;
 $ebug->program("t/calc.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 $ebug->break_point(6);
 $ebug->break_point(12);

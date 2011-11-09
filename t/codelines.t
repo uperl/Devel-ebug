@@ -7,6 +7,7 @@ use Devel::ebug;
 
 my $ebug = Devel::ebug->new;
 $ebug->program("t/calc.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 
 # Let's get some lines of code
@@ -44,6 +45,7 @@ is_deeply(\@codelines, [
 
 $ebug = Devel::ebug->new;
 $ebug->program("t/calc_oo.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 @codelines = $ebug->codelines("t/calc_oo.pl", 7, 8);
 is_deeply(\@codelines, [
@@ -61,6 +63,7 @@ is_deeply(\@codelines, [
 is(scalar(@codelines), 34);
 
 $ebug->program("t/pod.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 @codelines = $ebug->codelines();
 is($codelines[0], '#!perl');
