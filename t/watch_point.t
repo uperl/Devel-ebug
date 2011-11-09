@@ -7,6 +7,7 @@ use Devel::ebug;
 
 my $ebug = Devel::ebug->new;
 $ebug->program("t/calc.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 
 # just one watch point
@@ -17,6 +18,7 @@ is($ebug->pad->{'$e'}, 4);
 
 $ebug = Devel::ebug->new;
 $ebug->program("t/calc.pl");
+$ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 
 # multiple watch points - they disappear
