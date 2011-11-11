@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use lib 'lib';
-use Test::More tests => 11;
+use Test::More tests => 20;
 use Devel::ebug;
 
 my $ebug = Devel::ebug->new;
@@ -12,8 +12,7 @@ $ebug->load;
 
 # Let's get some lines of code
 
-my @codelines = $ebug->codelines();
-is_deeply(\@codelines, [
+my @calc = (
   '#!perl',
   '',
   'my $q = 1;',
@@ -33,7 +32,10 @@ is_deeply(\@codelines, [
   '# unbreakable line',
   'my $breakable_line = 1;',
   '# other unbreakable line',
-]);
+);
+
+my @codelines = $ebug->codelines();
+is_deeply(\@codelines, \@calc);
 
 @codelines = $ebug->codelines(1, 3, 4, 5);
 is_deeply(\@codelines, [
@@ -42,6 +44,14 @@ is_deeply(\@codelines, [
   'my $w = 2;',
   'my $e = add($q, $w);',
 ]);
+
+# Let's step through the program, and check that codeline is correct
+
+my @lines = (3, 4, 5, 12, 13, 14, 6, 7, 9);
+foreach my $l (@lines) {
+  is($ebug->codeline, $calc[$l-1]);
+  $ebug->step;
+}
 
 $ebug = Devel::ebug->new;
 $ebug->program("t/calc_oo.pl");
