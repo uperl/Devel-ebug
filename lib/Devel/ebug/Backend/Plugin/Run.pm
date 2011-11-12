@@ -7,7 +7,6 @@ sub register_commands {
       next        => { sub => \&next, record => 1 },
       return      => { sub => \&return, record => 1 },
       run         => { sub => \&run, record => 1 },
-      return      => { sub => \&return, record => 1 },      
       step        => { sub => \&step, record => 1 },
     );
 }
@@ -18,9 +17,6 @@ sub next {
   $context->{last} = 1;      # and out of the loop
   return {};
 }
-
-
-
 
 sub return {
   my($req, $context) = @_;
