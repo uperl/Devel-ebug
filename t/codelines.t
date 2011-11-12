@@ -12,7 +12,13 @@ $ebug->load;
 
 # Let's get some lines of code
 
+SKIP: {
+
 my @codelines = $ebug->codelines();
+
+  skip "Don't try lining up codelines because of sitecustomize", 11
+    if $codelines[0] =~ /sitecustomize/;
+
 is_deeply(\@codelines, [
   '#!perl',
   '',
@@ -72,3 +78,5 @@ is($codelines[9], '');
 is($codelines[10], '');
 is($codelines[11], '');
 is($codelines[31], 'sub add {');
+
+}
