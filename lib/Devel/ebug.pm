@@ -139,7 +139,7 @@ Devel::ebug - A simple, extensible Perl debugger
   $ebug->next;
   my($stdout, $stderr) = $ebug->output;
   my $actual_line = $ebug->break_point(6);
-  $ebug->break_point(6, '$e = 4');
+  $ebug->break_point(6, '$e == 4');
   $ebug->break_point("t/Calc.pm", 29);
   $ebug->break_point("t/Calc.pm", 29, '$i == 2');
   my $actual_line = $ebug->break_point_subroutine("main::add");
