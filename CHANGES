@@ -1,5 +1,13 @@
 Revision history for Perl module Devel::ebug
 
+0.52 2011.11.08
+     - Oops, forgot to update CHANGES for 0.51 :)
+     - Slight refactor of backend executable by pmurias (thanks!)
+     - Extract backend connection code into separate method
+     - Shuffle executables into bin/
+     - Fix wantarray test for older perls
+     - Fix some windows path usage
+
 0.50 Thu Oct 20 20:15:05 EDT 2011
      - Fix failing tests
      - Add YAML build dependency

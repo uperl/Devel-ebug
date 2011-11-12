@@ -1,4 +1,5 @@
 bin/ebug
+bin/ebug_backend_perl
 bin/ebug_client
 bin/ebug_server
 Build.PL
