@@ -13,7 +13,11 @@ sub run {
   my $self = shift;
   my $backend = shift;
 
-  my $filename = join "", @ARGV;
+  $SIG{INT} = sub {
+    die "INT";
+  };
+
+  my $filename = join " ", @ARGV;
 
   unless ($filename) {
     $filename = '-e "Interactive ebugging shell"';
