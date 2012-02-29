@@ -10,6 +10,8 @@ use String::Koremutake;
 use YAML::Syck;
 use Module::Pluggable require => 1;
 
+use FindBin qw($Bin);
+
 use base qw(Class::Accessor::Chained::Fast);
 __PACKAGE__->mk_accessors(qw(
     backend
@@ -34,7 +36,7 @@ sub load {
   my $port   = 3141 + ($rand % 1024);
 
   $ENV{SECRET} = $secret;
-  my $backend = $self->backend || "ebug_backend_perl";
+  my $backend = $self->backend || "$Bin/ebug_backend_perl";
   my $command = "$backend $program";;
   my $proc = Proc::Background->new(
     {'die_upon_destroy' => 1},
