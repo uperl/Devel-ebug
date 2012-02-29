@@ -147,10 +147,11 @@ sub get {
 sub sub {
   my (@args) = @_;
   my $sub = $DB::sub;
-  
+
   my $frame = { single => $DB::single, sub => $sub };
   push @{ $context->{stack} }, $frame;
 
+  # If we are in 'next' mode, then skip all the lines in the sub
   $DB::single = 0 if defined $context->{mode} && $context->{mode} eq 'next';
 
   no strict 'refs';
