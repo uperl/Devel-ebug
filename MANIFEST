@@ -1,9 +1,15 @@
+Build.PL
+CHANGES
+MANIFEST			This list of files
+META.json
+META.yml
+Makefile.PL
+README
+TODO
 bin/ebug
 bin/ebug_backend_perl
 bin/ebug_client
 bin/ebug_server
-Build.PL
-CHANGES
 lib/Devel/ebug.pm
 lib/Devel/ebug/Backend.pm
 lib/Devel/ebug/Backend/Plugin/ActionPoints.pm
@@ -27,16 +33,12 @@ lib/Devel/ebug/Plugin/Output.pm
 lib/Devel/ebug/Plugin/Pad.pm
 lib/Devel/ebug/Plugin/Run.pm
 lib/Devel/ebug/Plugin/StackTrace.pm
-Makefile.PL
-MANIFEST			This list of files
-META.json
-META.yml
-README
+t/Calc.pm
 t/basic.t
 t/break_point.t
 t/calc.pl
-t/Calc.pm
 t/calc_oo.pl
+t/calc_subref.pl
 t/carp.pl
 t/codelines.t
 t/ebug.t
@@ -56,8 +58,8 @@ t/signal.pl
 t/signal.t
 t/stack.pl
 t/stack.t
+t/subrefs.t
 t/subroutine.t
 t/undo.t
 t/watch_point.t
 t/yaml.pl
-TODO
