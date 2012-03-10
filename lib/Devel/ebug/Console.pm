@@ -110,6 +110,8 @@ restart Restart the program
       print "STDERR:\n$stderr\n";
     } elsif ($command eq 'r') {
       $ebug->run;
+      # TODO: Consider using this instead:
+      # eval { $ebug->run };
     } elsif ($command eq 'restart') {
       $ebug->load;
     } elsif ($command =~ /^ret ?(.*)/) {
