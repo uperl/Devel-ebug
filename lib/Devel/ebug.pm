@@ -7,7 +7,8 @@ use Devel::StackTrace;
 use IO::Socket::INET;
 use Proc::Background;
 use String::Koremutake;
-use YAML::Syck;
+# use YAML::Syck;
+use YAML;
 use Module::Pluggable require => 1;
 
 use FindBin qw($Bin);

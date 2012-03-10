@@ -6,7 +6,6 @@ use Carp;
 use Class::Accessor::Chained::Fast;
 use Devel::ebug;
 use Term::ReadLine;
-use YAML::Syck;
 use base qw(Class::Accessor::Chained::Fast);
 
 sub run {
