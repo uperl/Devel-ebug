@@ -1,10 +1,12 @@
 Revision history for Perl module Devel::ebug
 
 0.53 2012.02.29
-     - Add tests for codeline tracking
+     - Add tests for codeline tracking and subrefs
      - Fix YAML vs YAML::Syck (dunno)
      - Had to disable return-value-override feature
-     -
+     - Fix tests to work with new Carp
+     - Use findbin to load backend
+     - Improve argument param handling
 
 0.52 2011.11.08
      - Oops, forgot to update CHANGES for 0.51 :)
