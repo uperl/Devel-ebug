@@ -9,7 +9,7 @@ use Module::Pluggable
   search_path => 'Devel::ebug::Backend::Plugin',
   require     => 1;
 
-our $VERSION = "0.53_02";
+our $VERSION = "0.53";
 use vars qw(@dbline %dbline);
 
 # Let's catch INT signals and set a flag when they occur
