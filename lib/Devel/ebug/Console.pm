@@ -64,7 +64,7 @@ sub run {
     $command = "q" if not defined $command;
     $command = $last_command if ($command eq "");
 
-    if ($command =~ /[?h]/) {
+    if ($command =~ /^\s*[?h](elp)?\s*$/) {
       print 'Commands:
 
       b Set break point at a line number (eg: b 6, b code.pl 6, b code.pl 6 $x > 7,
