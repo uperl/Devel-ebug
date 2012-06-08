@@ -9,7 +9,7 @@ eval "use Test::Expect";
 plan skip_all => "Test::Expect required for testing ebug: $@" if $@;
 eval "use Expect::Simple";
 plan skip_all => "Expect::Simple required for testing ebug: $@" if $@;
-plan tests => 17;
+plan tests => 19;
 
 expect_run(
   command => "PERL_RL=\"o=0\" $^X bin/ebug --backend \"$^X bin/ebug_backend_perl\" t/calc.pl",
@@ -51,6 +51,7 @@ expect("", "main(t/calc.pl#5):\nmy \$e = add(\$q, \$w);", 'step again');
 expect("n", "main(t/calc.pl#6):\n\$e++;", 'next');
 expect("r", qq{main(t/calc.pl#9):\nprint "\$e\\n";}, 'run');
 expect("r", qq{}, 'run to end');
-# expect("r", qq{Program finished. Enter 'restart' or 'q'}, 'run to end');
-# expect("q", qq{});
+expect("r", qq{Program finished. Enter 'restart' or 'q'}, 'run to end');
+expect_quit();
+exit;
 
