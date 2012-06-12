@@ -1,9 +1,10 @@
+package Devel::ebug::Backend;
+
 package DB;
 use strict;
 use warnings;
 use IO::Socket::INET;
 use String::Koremutake;
-# use YAML::Syck;
 use YAML;
 use Module::Pluggable
   search_path => 'Devel::ebug::Backend::Plugin',
