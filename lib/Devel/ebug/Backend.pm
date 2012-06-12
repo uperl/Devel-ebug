@@ -19,6 +19,28 @@ $SIG{INT} = sub {
   return;
 };
 
+=head1 C< $context >
+
+While running, the backend keeps a global C<< $context >> variable. This contains the current contextual state of the program.
+
+  Field         Type              Meaning
+  -----         ----              -------
+  finished      bool              set when the program ENDs
+  initialise    bool              Flag for first-time initialization
+  mode          step,run,next     step-over, run forever, step-in
+  stack         arrayref          Simple callstack, saves 'single' state
+  watch_points  arrayref          List of breakpoints
+  socket        IO::Socket::INET  Connection to frontend
+  package       string            Current package
+  filename      string            Current filename
+  line          int               Current line number
+  watch_single  bool              Only watch once
+  codeline      string            Source of current line
+  last          bool              set to 1 to exit DB::DB
+  history       arrayref          used by 'record' plugin
+
+=cut
+
 my $context = {
   finished     => 0,
   initialise   => 1,
