@@ -1,0 +1,21 @@
+OK... how do we do this?
+
+
+How it works now:
+* ebug
+* runs Devel::ebug::Console->new->run
+* Console does Devel::ebug->new->program($file)->backend()->load
+* backend ||= ebug_backend_perl
+* uses Proc::Background to start backend, saves in $self->proc
+* calls attach to connect to backend
+* Does basic ping and tells he backend to give 'basic'
+* Console enteres endless loop sending commands
+* Each command blocks until backend responds
+
+Backend:
+* Runs a new perl with -d:ebug::Backend
+* Contains actual DB:: routines
+* DB::DB first calls initialize
+* initialize opens listen socket, waits for connection
+* Loads plugins
+*
