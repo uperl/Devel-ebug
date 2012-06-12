@@ -15,13 +15,14 @@ sub next {
   my($req, $context) = @_;
   $context->{mode} = "next"; # single step (but over subroutines)
   $context->{last} = 1;      # and out of the loop
+  $DB::single = 1;           # Keep track of where we are
   return {};
 }
 
 sub return {
   my($req, $context) = @_;
   if ($req->{values}) {
-    $context->{stack}->[0]->{return} = $req->{values};
+    $context->{stack}->[-1]->{return} = $req->{values};
   }
   $context->{mode} = "return"; # run until returned from subroutine
   $DB::single = 0; # run
@@ -52,6 +53,7 @@ sub step {
   $DB::single = 1;           # single step
   $context->{mode} = "step"; # single step (into subroutines)
   $context->{last} = 1;      # and out of the loop, onto the next command
+  $DB::single = 1;           # Keep track of where we are
   return {};
 }
 
