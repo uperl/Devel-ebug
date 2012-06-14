@@ -52,11 +52,11 @@ sub run {
       print "ebug: Program finished. Enter 'restart' or 'q'\n";
     } else {
       if ($list_always) {
-	show_codelines($codelines, $ebug, $list_lines_count) if($list_always);
+        show_codelines($codelines, $ebug, $list_lines_count) if($list_always);
       } else {
-	print $ebug->subroutine
-	  . "(" . $ebug->filename . "#" . $ebug->line . "):\n"
-	  . $ebug->codeline, "\n";
+        print $ebug->subroutine
+          . "(" . $ebug->filename . "#" . $ebug->line . "):\n"
+          . $ebug->codeline, "\n";
       }
     }
 
@@ -98,8 +98,8 @@ restart Restart the program
     } elsif ($command eq 'p') {
       my $pad = $ebug->pad_human;
       foreach my $k (sort keys %$pad) {
-	my $v = $pad->{$k};
-	print "  $k = $v;\n";
+        my $v = $pad->{$k};
+        print "  $k = $v;\n";
       }
     } elsif ($command eq 's') {
       $ebug->step;
