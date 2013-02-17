@@ -2,7 +2,7 @@ package Devel::ebug::Plugin::ActionPoints;
 use strict;
 use warnings;
 use base qw(Exporter);
-our @EXPORT = qw(break_point break_point_delete break_point_subroutine break_points break_points_with_condition all_break_points_with_condition watch_point);
+our @EXPORT = qw(break_point break_point_delete break_point_subroutine break_points break_points_with_condition all_break_points_with_condition watch_point break_on_load);
 
 # set a break point (by default in the current file)
 sub break_point {
@@ -91,6 +91,19 @@ sub watch_point {
     command => "watch_point",
     watch_point => $watch_point,
   });
+}
+
+
+# set a break point on file loading
+sub break_on_load {
+  my $self = shift;
+  my($filename) = @_;
+  
+  my $response = $self->talk({
+    command   => "break_on_load",
+    filename  => $filename,
+  });
+  return $response->{line};
 }
 
 1;
