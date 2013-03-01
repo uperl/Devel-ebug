@@ -142,6 +142,7 @@ Devel::ebug - A simple, extensible Perl debugger
   $ebug->break_point(6, '$e == 4');
   $ebug->break_point("t/Calc.pm", 29);
   $ebug->break_point("t/Calc.pm", 29, '$i == 2');
+  $ebug->break_on_load("t/Calc.pm");
   my $actual_line = $ebug->break_point_subroutine("main::add");
   $ebug->break_point_delete(29);
   $ebug->break_point_delete("t/Calc.pm", 29);
@@ -258,6 +259,10 @@ Breakpoints can not be set on some lines (for example comments); in
 this case a breakpoint will be set at the next breakable line, and the
 line number will be returned. If no such line exists, no breakpoint is
 set and the function returns C<undef>.
+
+=head2 break_on_load
+
+Set a breakpoint on file loading, the file name can be relative or absolute.
 
 =head2 break_point_delete
 
