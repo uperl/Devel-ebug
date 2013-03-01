@@ -1,5 +1,17 @@
 package Devel::ebug::Backend;
 
+=head1 NAME
+
+Devel::ebug::Backend - Actual DB:: routines for the debugger
+
+=head1 DESCRIPTION
+
+This module isn't used directly. Instead see L< Devel::ebug >. But here's some documentation anyway :)
+
+The Backend is what actually implements the debugger, but using special hooks that perl provides in the DB:: namespace. This module allows the front-end to remotely control the debugger by listening for commands on a TCP socket.
+
+=cut
+
 package DB;
 use strict;
 use warnings;
@@ -21,14 +33,15 @@ $SIG{INT} = sub {
 
 =head1 C< $context >
 
-While running, the backend keeps a global C<< $context >> variable. This contains the current contextual state of the program.
+While running, the backend keeps a C<< $context >> variable. It holds all of the Devel::ebug specific state during debugging.
 
-  Field         Type              Meaning
+  Field         Type              Usage
   -----         ----              -------
   finished      bool              set when the program ENDs
   initialise    bool              Flag for first-time initialization
   mode          step,run,next     step-over, run forever, step-in
-  stack         arrayref          Simple callstack, saves 'single' state
+  stack         arrayref          Sub callstack, each entry contains saved
+                                  $DB::single and sub name
   watch_points  arrayref          List of breakpoints
   socket        IO::Socket::INET  Connection to frontend
   package       string            Current package
@@ -59,6 +72,8 @@ sub DB {
   my ($package, $filename, $line) = caller;
   ($context->{package}, $context->{filename}, $context->{line}) =
     ($package, $filename, $line);
+
+  # debug("DB\t$context->{package}\t$context->{filename}\t$context->{line}\t$DB::single\t$context->{mode}");
 
   initialise() if $context->{initialise};
 
@@ -126,6 +141,12 @@ sub DB {
   }
 }
 
+=head2 $backend->initialize()
+
+Start a TCP socket and wait for a connection. Then load up all of our plugins.
+
+=cut
+
 sub initialise {
   my $k      = String::Koremutake->new;
   my $int    = $k->koremutake_to_integer($ENV{SECRET});
@@ -139,6 +160,8 @@ sub initialise {
     Reuse     => 1,
     )
     || die $!;
+
+  # Wait for a connection
   $context->{socket} = $server->accept;
 
   foreach my $plugin (__PACKAGE__->plugins) {
@@ -171,6 +194,7 @@ sub get {
 sub sub {
   my (@args) = @_;
   my $sub = $DB::sub;
+  # debug("sub\t$context->{package}\t$context->{filename}\t$context->{line}\t$DB::single\t$context->{mode}\t$sub");
 
   my $frame = { single => $DB::single, sub => $sub };
   push @{ $context->{stack} }, $frame;
@@ -265,6 +289,14 @@ sub END {
   $DB::single = 1;
   DB::fake::at_exit();
 }
+
+# sub debug {
+  # # return;
+  # my $msg = shift;
+  # open my $debugfile, '>>', 'debug.txt'
+    # or die "Error: $!";
+  # print $debugfile "$msg\n";
+# }
 
 package DB::fake;
 
