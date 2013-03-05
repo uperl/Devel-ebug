@@ -6,14 +6,17 @@ use Carp;
 use Class::Accessor::Chained::Fast;
 use Devel::ebug;
 use Term::ReadLine;
-use YAML::Syck;
 use base qw(Class::Accessor::Chained::Fast);
 
 sub run {
   my $self = shift;
   my $backend = shift;
 
-  my $filename = join "", @ARGV;
+  $SIG{INT} = sub {
+    die "INT";
+  };
+
+  my $filename = join " ", @ARGV;
 
   unless ($filename) {
     $filename = '-e "Interactive ebugging shell"';
@@ -61,7 +64,7 @@ sub run {
     $command = "q" if not defined $command;
     $command = $last_command if ($command eq "");
 
-    if ($command =~ /[?h]/) {
+    if ($command =~ /^\s*[?h](elp)?\s*$/) {
       print 'Commands:
 
       b Set break point at a line number (eg: b 6, b code.pl 6, b code.pl 6 $x > 7,
@@ -107,6 +110,8 @@ restart Restart the program
       print "STDERR:\n$stderr\n";
     } elsif ($command eq 'r') {
       $ebug->run;
+      # TODO: Consider using this instead:
+      # eval { $ebug->run };
     } elsif ($command eq 'restart') {
       $ebug->load;
     } elsif ($command =~ /^ret ?(.*)/) {

@@ -3,12 +3,13 @@ use strict;
 use warnings;
 use IO::Socket::INET;
 use String::Koremutake;
-use YAML::Syck;
+# use YAML::Syck;
+use YAML;
 use Module::Pluggable
   search_path => 'Devel::ebug::Backend::Plugin',
   require     => 1;
-our $VERSION = "0.52";
 
+our $VERSION = "0.53";
 use vars qw(@dbline %dbline);
 
 # Let's catch INT signals and set a flag when they occur
@@ -24,6 +25,7 @@ my $context = {
   stack        => [],
   watch_points => [],
 };
+
 
 # Commands that the back end can respond to
 # Set record if the command changes start and should thus be recorded
@@ -146,10 +148,11 @@ sub get {
 sub sub {
   my (@args) = @_;
   my $sub = $DB::sub;
-  
+
   my $frame = { single => $DB::single, sub => $sub };
   push @{ $context->{stack} }, $frame;
 
+  # If we are in 'next' mode, then skip all the lines in the sub
   $DB::single = 0 if defined $context->{mode} && $context->{mode} eq 'next';
 
   no strict 'refs';
@@ -177,6 +180,21 @@ sub sub {
     }
   }
 }
+
+sub DB::postponed {
+    # If this is a subroutine, let postponed_sub() deal with it.
+    return &postponed_sub unless ref \$_[0] eq 'GLOB';
+
+    my ($fileName) = @_;
+    $fileName =~ s/^.*_<//;
+
+    if (exists $DB::break_on_load{$fileName}
+      || exists $DB::break_on_load{File::Spec->rel2abs( $fileName)} ){
+        $DB::single = 1;
+    }
+
+}
+
 
 sub fetch_codelines {
   my ($filename, @lines) = @_;

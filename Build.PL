@@ -15,13 +15,8 @@ my $requires = {
   'Scalar::Util'         => '0',
   'String::Koremutake'   => '0',
   'Test::More'           => '0',
-  'YAML::Syck'           => '0.85',
+  'YAML'                 => '0',
 };
-
-my $build_requires = {
-  'YAML' => '0',
-};
-
 
 # Test::Expect doesn't run under Windows atm
 if ($^O !~ /mswin32/i) {
@@ -33,7 +28,6 @@ my $build = Module::Build->new(
   license            => 'perl',
   module_name        => 'Devel::ebug',
   requires           => $requires,
-  build_requires     => $build_requires,
   script_files       => ['bin/ebug', 'bin/ebug_client', 'bin/ebug_server', 'bin/ebug_backend_perl'],
 );
 $build->create_build_script;
