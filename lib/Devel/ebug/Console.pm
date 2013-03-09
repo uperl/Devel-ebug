@@ -69,6 +69,7 @@ sub run {
 
       b Set break point at a line number (eg: b 6, b code.pl 6, b code.pl 6 $x > 7,
       b Calc::fib)
+     bf break on file loading (eg: bf Calc.pm)
       d Delete a break point (d 6, d code.pl 6)
       e Eval Perl code and print the result (eg: e $x+$y)
       f Show all the filenames loaded
@@ -130,6 +131,8 @@ restart Restart the program
       $ebug->break_point($1, $2, $3);
     } elsif ($command =~ /^b (.+)/) {
       $ebug->break_point_subroutine($1);
+    } elsif ($command =~ /^bf (.+)/) {
+      $ebug->break_on_load($1);
     } elsif ($command =~ /^d (.+?) (\d+)/) {
       $ebug->break_point_delete($1, $2);
     } elsif ($command =~ /^d (\d+)/) {
