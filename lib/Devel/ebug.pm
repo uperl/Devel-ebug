@@ -20,7 +20,7 @@ __PACKAGE__->mk_accessors(qw(
     program socket proc
     package filename line codeline subroutine finished));
 
-our $VERSION = "0.53";
+our $VERSION = "0.54";
 
 # let's run the code under our debugger and connect to the server it
 # starts up
@@ -525,7 +525,7 @@ Leon Brocard, C<< <acme@astray.com> >>
 =head1 COPYRIGHT
 
 Copyright (C) 2005-2008, Leon Brocard
-Copyright (C) 2011, Brock Wilcox
+Copyright (C) 2011-NOW, Brock Wilcox
 
 =head1 LICENSE
 

@@ -1,5 +1,9 @@
 Revision history for Perl module Devel::ebug
 
+0.54 2013.03.19
+     - Add 'break on file loading' feature (thanks jchassler!)
+     - Fix commands starting with ^h
+
 0.53 2012.02.29
      - Add tests for codeline tracking and subrefs
      - Fix YAML vs YAML::Syck (dunno)
