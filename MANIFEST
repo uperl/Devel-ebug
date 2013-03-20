@@ -1,9 +1,6 @@
 Build.PL
 CHANGES
 MANIFEST			This list of files
-META.json
-META.yml
-Makefile.PL
 README
 TODO
 bin/ebug
@@ -63,3 +60,5 @@ t/subroutine.t
 t/undo.t
 t/watch_point.t
 t/yaml.pl
+t/breakOnLoad.t
+t/load_calc.pl
