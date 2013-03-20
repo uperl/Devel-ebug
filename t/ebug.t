@@ -25,6 +25,7 @@ expect("h", 'Commands:
 
       b Set break point at a line number (eg: b 6, b code.pl 6, b code.pl 6 $x > 7,
       b Calc::fib)
+     bf break on file loading (eg: bf Calc.pm)
       d Delete a break point (d 6, d code.pl 6)
       e Eval Perl code and print the result (eg: e $x+$y)
       f Show all the filenames loaded
