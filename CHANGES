@@ -1,5 +1,8 @@
 Revision history for Perl module Devel::ebug
 
+0.55 2013.03.19
+     - Extra version to add missing files :)
+
 0.54 2013.03.19
      - Add 'break on file loading' feature (thanks jchassler!)
      - Fix commands starting with ^h
