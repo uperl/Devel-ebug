@@ -62,3 +62,6 @@ t/watch_point.t
 t/yaml.pl
 t/breakOnLoad.t
 t/load_calc.pl
+Makefile.PL
+META.yml
+META.json
