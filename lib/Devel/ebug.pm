@@ -462,19 +462,19 @@ The stack_trace method returns the current stack trace, using
 L<Devel::StackTrace>. It returns a list of L<Devel::StackTraceFrame>
 methods:
 
-  my @frames = $ebug->stack_trace;
-  foreach my $frame (@trace) {
-    print $frame->package, "->",$frame->subroutine, 
-    "(", $frame->filename, "#", $frame->line, ")\n";
+  my @traces = $ebug->stack_trace;
+  foreach my $trace (@traces) {
+    print $trace->package, "->",$trace->subroutine,
+    "(", $trace->filename, "#", $trace->line, ")\n";
   }
 
 =head2 stack_trace_human
 
 The stack_trace_human method returns the current stack trace in a human-readable format:
 
-  my @frames = $ebug->stack_trace_human;
-  foreach my $frame (@trace) {
-    print "$frame\n";
+  my @traces = $ebug->stack_trace_human;
+  foreach my $trace (@traces) {
+    print "$trace\n";
   }
 
 =head2 undo
