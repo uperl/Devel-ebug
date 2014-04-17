@@ -73,13 +73,13 @@ sub attach {
 
     my $response = $self->talk(
         {   command => "ping",
-            version => $VERSION,
+            version => $Devel::ebug::VERSION,
             secret  => $key,
         }
     );
     my $version = $response->{version};
-    die "Client version $version != our version $VERSION"
-        unless $version eq $VERSION;
+    die "Client version $version != our version $Devel::ebug::VERSION"
+        unless $version eq $Devel::ebug::VERSION;
 
     $self->basic;    # get basic information for the first line
 }
