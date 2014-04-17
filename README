@@ -17,9 +17,10 @@ SYNOPSIS
       $ebug->next;
       my($stdout, $stderr) = $ebug->output;
       my $actual_line = $ebug->break_point(6);
-      $ebug->break_point(6, '$e = 4');
+      $ebug->break_point(6, '$e == 4');
       $ebug->break_point("t/Calc.pm", 29);
       $ebug->break_point("t/Calc.pm", 29, '$i == 2');
+      $ebug->break_on_load("t/Calc.pm");
       my $actual_line = $ebug->break_point_subroutine("main::add");
       $ebug->break_point_delete(29);
       $ebug->break_point_delete("t/Calc.pm", 29);
@@ -127,6 +128,10 @@ METHODS
     case a breakpoint will be set at the next breakable line, and the line
     number will be returned. If no such line exists, no breakpoint is set
     and the function returns "undef".
+
+  break_on_load
+    Set a breakpoint on file loading, the file name can be relative or
+    absolute.
 
   break_point_delete
     The break_point_delete method deletes an existing break point. A break
@@ -300,19 +305,19 @@ METHODS
     The stack_trace method returns the current stack trace, using
     Devel::StackTrace. It returns a list of Devel::StackTraceFrame methods:
 
-      my @frames = $ebug->stack_trace;
-      foreach my $frame (@trace) {
-        print $frame->package, "->",$frame->subroutine, 
-        "(", $frame->filename, "#", $frame->line, ")\n";
+      my @traces = $ebug->stack_trace;
+      foreach my $trace (@traces) {
+        print $trace->package, "->",$trace->subroutine,
+        "(", $trace->filename, "#", $trace->line, ")\n";
       }
 
   stack_trace_human
     The stack_trace_human method returns the current stack trace in a
     human-readable format:
 
-      my @frames = $ebug->stack_trace_human;
-      foreach my $frame (@trace) {
-        print "$frame\n";
+      my @traces = $ebug->stack_trace_human;
+      foreach my $trace (@traces) {
+        print "$trace\n";
       }
 
   undo
@@ -350,10 +355,13 @@ BUGS
     Devel::ebug does not handle signals under Windows.
 
 AUTHOR
+    Latest releases by Brock Wilcox, "<awwaiid@thelackthereof.org>"
+
     Leon Brocard, "<acme@astray.com>"
 
 COPYRIGHT
-    Copyright (C) 2005-8, Leon Brocard
+    Copyright (C) 2005-2008, Leon Brocard Copyright (C) 2011-NOW, Brock
+    Wilcox
 
 LICENSE
     This module is free software; you can redistribute it or modify it under
