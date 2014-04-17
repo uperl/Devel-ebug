@@ -1,4 +1,5 @@
 package Devel::ebug::Plugin::Output;
+
 use strict;
 use warnings;
 use base qw(Exporter);

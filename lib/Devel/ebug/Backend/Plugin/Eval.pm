@@ -1,4 +1,5 @@
 package Devel::ebug::Backend::Plugin::Eval;
+
 use strict;
 use warnings;
 
@@ -12,6 +13,7 @@ sub register_commands {
 
 
 package DB;
+
 
 # there appears to be something semi-magical about the DB 
 # namespace that makes this eval only work when it's in it

@@ -1,4 +1,5 @@
 package Devel::ebug::Backend::Plugin::Ping;
+
 use strict;
 use warnings;
 

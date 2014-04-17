@@ -1,4 +1,5 @@
 package Devel::ebug::Backend::Plugin::ActionPoints;
+
 use strict;
 use warnings;
 use File::Spec;

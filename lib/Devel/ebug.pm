@@ -1,4 +1,5 @@
 package Devel::ebug;
+
 use strict;
 use warnings;
 use Carp;
@@ -19,8 +20,6 @@ __PACKAGE__->mk_accessors(qw(
     port
     program socket proc
     package filename line codeline subroutine finished));
-
-our $VERSION = "0.55";
 
 # let's run the code under our debugger and connect to the server it
 # starts up
