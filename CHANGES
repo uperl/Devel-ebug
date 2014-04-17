@@ -1,5 +1,9 @@
 Revision history for Perl module Devel::ebug
 
+0.56 2014.04.16
+     - Converted to Dist::Zilla
+     - Minor fixes (thanks hobbestigrou!)
+
 0.55 2013.03.19
      - Extra version to add missing files :)
 
