@@ -1,4 +1,5 @@
 package Devel::ebug::Backend::Plugin::Pad;
+
 use strict;
 use warnings;
 use PadWalker;
@@ -8,6 +9,7 @@ sub register_commands {
 }
 
 package DB;
+
 
 use Scalar::Util qw(blessed reftype);
 sub pad {
