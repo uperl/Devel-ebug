@@ -3,7 +3,7 @@ package Devel::ebug::Plugin::Run;
 use strict;
 use warnings;
 use base qw(Exporter);
-our @EXPORT = qw(undo run return step next);
+our @EXPORT = qw(undo run return step next prev);
 
 # undo
 sub undo {
@@ -55,6 +55,13 @@ sub step {
 sub next {
   my($self) = @_;
   my $response = $self->talk({ command => "next" });
+  $self->basic; # get basic information for the new line
+}
+
+# step onto the prev line (going over subroutines?)
+sub prev {
+  my($self) = @_;
+  my $response = $self->talk({ command => "prev" });
   $self->basic; # get basic information for the new line
 }
 

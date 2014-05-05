@@ -106,6 +106,8 @@ restart Restart the program
       $ebug->step;
     } elsif ($command eq 'n') {
       $ebug->next;
+    } elsif ($command eq 'prev') {
+      $ebug->prev;
     } elsif ($command eq 'o') {
       my($stdout, $stderr) = $ebug->output;
       print "STDOUT:\n$stdout\n";
