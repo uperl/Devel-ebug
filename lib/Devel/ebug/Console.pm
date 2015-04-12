@@ -28,7 +28,7 @@ sub run {
   $ebug->backend($backend);
   $ebug->load;
 
-  my $codelines;
+  my $codelines = {};
 
   print "* Welcome to Devel::ebug $Devel::ebug::VERSION\n";
 
