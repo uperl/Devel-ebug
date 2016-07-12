@@ -42,13 +42,13 @@ $ebug->break_point("t/Calc.pm", 19);
 $ebug->run;
 @trace = $ebug->stack_trace_human;
 is(scalar(@trace), 1);
-is($trace[0], '$calc->fib1(15)');
+like($trace[0], qr{^Calc::fib1\("Calc=HASH\(.*\)", 15\)});
 
 $ebug->run;
 @trace = $ebug->stack_trace_human;
 is(scalar(@trace), 2);
-is($trace[1], '$calc->fib1(15)');
-is($trace[0], '$self->fib1(14)');
+like($trace[1], qr{^Calc::fib1\("Calc=HASH\(.*\)", 15\)$});
+like($trace[0], qr{^fib1\("Calc=HASH\(.*\)", 14\)$});
 
 $ebug = Devel::ebug->new;
 $ebug->program("t/koremutake.pl");
@@ -69,7 +69,7 @@ $ebug->break_point_subroutine("String::Koremutake::integer_to_koremutake");
 $ebug->run;
 @trace = $ebug->stack_trace_human;
 is(scalar(@trace), 1);
-is($trace[0], '$koremutake->integer_to_koremutake(65535)');
+like($trace[0], qr{^String::Koremutake::integer_to_koremutake\("String::Koremutake=HASH\(.*\)", 65535\)$});
 
 $ebug = Devel::ebug->new;
 $ebug->program("t/stack.pl");
@@ -104,15 +104,15 @@ is($trace[0], 'show("orange o rama")');
 
 $ebug->run;
 @trace = $ebug->stack_trace_human;
-is($trace[0], 'show([...])');
+like($trace[0], qr{^show\("ARRAY\(.*\)"\)$});
 
 $ebug->run;
 @trace = $ebug->stack_trace_human;
-is($trace[0], 'show({...})');
+like($trace[0], qr{^show\("HASH\(.*\)"\)$});
 
 $ebug->run;
 @trace = $ebug->stack_trace_human;
-is($trace[0], 'show($koremutake)');
+like($trace[0], qr{^show\("String::Koremutake=HASH\(.*\)"\)});
 
 # use YAML; warn Dump \@trace;
 
