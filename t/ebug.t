@@ -19,7 +19,7 @@ expect_run(
 
 my $version = $Devel::ebug::VERSION;
 
-expect_like(qr/Welcome to Devel::ebug $version/, 'Got welcome');
+expect_like(do{ no warnings 'uninitialized'; qr/Welcome to Devel::ebug $version/ }, 'Got welcome');
 expect_like(qr{main\(t/calc.pl#3\):\nmy \$q = 1;}, 'Got initial lines');
 expect("h", 'Commands:
 
