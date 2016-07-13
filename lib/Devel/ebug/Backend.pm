@@ -138,6 +138,7 @@ sub put {
 
 sub get {
   exit unless $context->{socket};
+  local $/= "\n";
   my $data = $context->{socket}->getline;
   my $req = Load(pack("h*", $data));
   push @{ $context->{history} }, $req
