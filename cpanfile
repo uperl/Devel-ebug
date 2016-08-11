@@ -1,6 +1,6 @@
 requires "Carp" => "0";
 requires "Class::Accessor::Chained::Fast" => "0";
-requires "Devel::StackTrace" => "0";
+requires "Devel::StackTrace" => "2.00";
 requires "Exporter" => "0";
 requires "File::Spec" => "0";
 requires "FindBin" => "0";
@@ -24,5 +24,5 @@ on 'test' => sub {
 };
 
 on 'configure' => sub {
-  requires "ExtUtils::MakeMaker" => "6.30";
+  requires "ExtUtils::MakeMaker" => "0";
 };
