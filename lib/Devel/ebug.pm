@@ -124,6 +124,9 @@ __END__
 
 Devel::ebug - A simple, extensible Perl debugger
 
+=for html
+<a href="https://travis-ci.org/awwaiid/Devel-ebug"><img src="https://travis-ci.org/awwaiid/Devel-ebug.png"></a>
+
 =head1 SYNOPSIS
 
   use Devel::ebug;
