@@ -79,7 +79,7 @@ sub attach {
     );
     my $version = $response->{version};
     die "Client version $version != our version $Devel::ebug::VERSION"
-        unless $version eq $Devel::ebug::VERSION;
+        unless do { no warnings 'uninitialized'; $version eq $Devel::ebug::VERSION };
 
     $self->basic;    # get basic information for the first line
 }
