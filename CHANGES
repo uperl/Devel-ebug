@@ -1,5 +1,11 @@
 Revision history for Perl module Devel::ebug
 
+0.57 2016.08.11
+     - Set up travisci
+     - Localize $/ to avoid hang (plicease)
+     - Add dist metadata. Some other things (plicease)
+     - Fix to work with newer stacktrace (picease)
+
 0.56 2014.04.16
      - Converted to Dist::Zilla
      - Minor fixes (thanks hobbestigrou!)
