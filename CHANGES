@@ -40,6 +40,21 @@ Revision history for Perl module Devel::ebug
 0.49 Thu Oct 16 20:07:34 BST 2008
      - Add a human-readable license to the documentation
 
+0.49
+     - Make Devel::ebug more easily subclassable and Devel::ebug::Backend
+       more easily replaceable.
+     - Move the guts of ebug_client into a separate class (Devel::ebug::Client)
+       and remove some hacks.
+     - Add Devel::ebug::Server and Devel::ebug::Backend::Client that allow
+       the debugger to listen on a port and the debuggee to attach to the
+       debugger.
+     - Allow a debuggable program to run unattached to the debugger and
+       attach at an arbitrary point.
+     - Allow ebug_client and ebug_server to use a different ebug
+       frontend/backend.
+     - Fix pod to mention ebug_client(1) and ebug_server(1) with
+       the correct name.
+
 0.48 Mon Apr 30 20:37:06 CEST 2007
      - Added ebug-server(1), a remote debugger server
      - Added ebug-client(1), a remote debugger client

@@ -37,7 +37,7 @@ sub DB {
   ($context->{package}, $context->{filename}, $context->{line}) =
     ($package, $filename, $line);
 
-  initialise() if $context->{initialise};
+  initialise($context) if $context->{initialise};
 
   # we're here because of a signal, reset the flag
   if ($DB::signal) {
@@ -46,7 +46,7 @@ sub DB {
 
   # single step
   my $old_single = $DB::single;
-  $DB::single = 1;
+  $DB::single = 1 unless $context->{mode} eq 'unattached';
 
   if (@{ $context->{watch_points} }) {
     my %delete;
@@ -85,8 +85,10 @@ sub DB {
   $context->{codeline} = (fetch_codelines($filename, $line - 1))[0];
   chomp $context->{codeline};
 
+  return if $context->{mode} eq "unattached";
   while (1) {
     my $req     = get();
+    die "communication error" unless defined $req;
     my $command = $req->{command};
 
     my $sub = $commands{$command}->{sub};
@@ -104,6 +106,7 @@ sub DB {
 }
 
 sub initialise {
+  my ($context) = @_;
   my $k      = String::Koremutake->new;
   my $int    = $k->koremutake_to_integer($ENV{SECRET});
   my $port   = 3141 + ($int % 1024);
@@ -118,6 +121,12 @@ sub initialise {
     || die $!;
   $context->{socket} = $server->accept;
 
+  load_plugins();
+
+  $context->{initialise} = 0;
+}
+
+sub load_plugins {
   foreach my $plugin (__PACKAGE__->plugins) {
     my $sub = $plugin->can("register_commands");
     next unless $sub;
@@ -126,8 +135,6 @@ sub initialise {
       $commands{$command} = $new{$command};
     }
   }
-
-  $context->{initialise} = 0;
 }
 
 sub put {
@@ -140,6 +147,7 @@ sub get {
   exit unless $context->{socket};
   local $/= "\n";
   my $data = $context->{socket}->getline;
+  return unless defined $data;
   my $req = Load(pack("h*", $data));
   push @{ $context->{history} }, $req
     if exists $commands{ $req->{command} }->{record};
@@ -217,8 +225,9 @@ sub fetch_codelines {
   # remove newlines
   @codelines = map { $_ =~ s/\s+$//; $_ } @codelines;
 
-  # we run it with -d:ebug::Backend, so remove this extra line
-  @codelines = grep { $_ ne 'use Devel::ebug::Backend;' } @codelines;
+  # we run it with -d:ebug::Backend[::something], so remove this extra line
+  @codelines = grep { rindex( $_, 'use Devel::ebug::Backend', 0 ) == -1 }
+                    @codelines;
 
   # for some reasons, the perl internals leave the opening POD line
   # around but strip the rest. so let's strip the opening POD line

@@ -23,7 +23,7 @@ sub run {
     $filename = '-e "Interactive ebugging shell"';
   }
 
-  my $ebug = Devel::ebug->new;
+  my $ebug = ref($ebug_t) ? $ebug_t : ($ebug_t || 'Devel::ebug')->new;
   $ebug->program($filename);
   $ebug->backend($backend);
   $ebug->load;

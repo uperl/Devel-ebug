@@ -27,8 +27,7 @@ sub load {
   my $self = shift;
   my $program = $self->program;
 
-  # import all the plugins into our namespace
-  do { eval "use $_ " } for $self->plugins;
+  $self->load_plugins;
 
   my $k = String::Koremutake->new;
   my $rand = int(rand(100_000));
