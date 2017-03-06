@@ -1,5 +1,9 @@
 Revision history for Perl module Devel::ebug
 
+0.58 2017.03.06
+     - DZil improvements
+     - Make scripts consistently use #!/usr/bin/perl (maybe env would be better)
+
 0.57 2016.08.11
      - Set up travisci
      - Localize $/ to avoid hang (plicease)
