@@ -15,14 +15,21 @@ requires "Term::ReadLine" => "0";
 requires "YAML" => "0";
 requires "base" => "0";
 requires "lib" => "0";
+requires "perl" => "5.008";
 requires "strict" => "0";
 requires "vars" => "0";
 requires "warnings" => "0";
 
 on 'test' => sub {
   requires "Test::More" => "0";
+  requires "perl" => "5.008";
 };
 
 on 'configure' => sub {
   requires "ExtUtils::MakeMaker" => "0";
+  requires "perl" => "5.008";
+};
+
+on 'configure' => sub {
+  suggests "JSON::PP" => "2.27300";
 };
