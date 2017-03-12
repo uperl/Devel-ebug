@@ -1,5 +1,8 @@
 Revision history for Perl module Devel::ebug
 
+0.59 2017.03.12
+     - Fix long-standing bug when -l used on #! line
+
 0.58 2017.03.06
      - DZil improvements
      - Make scripts consistently use #!/usr/bin/perl (maybe env would be better)
