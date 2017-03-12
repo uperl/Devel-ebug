@@ -133,6 +133,7 @@ sub initialise {
 sub put {
   my ($res) = @_;
   my $data = unpack("h*", Dump($res));
+  local $\; # if we run under perl -l the following line would get mangled
   $context->{socket}->print($data . "\n");
 }
 
