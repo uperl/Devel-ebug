@@ -82,7 +82,7 @@ sub DB {
   }
 
   $context->{watch_single} = 1;
-  $context->{codeline} = (fetch_codelines($filename, $line - 1))[0];
+  $context->{codeline} = (fetch_codelines($filename, $line))[0];
   chomp $context->{codeline};
 
   while (1) {
