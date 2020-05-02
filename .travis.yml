@@ -1,7 +1,13 @@
 language: perl
+
 perl:
   - "5.30"
   - "5.28"
+
 before_script:
   - cpanm -nq
   --installdeps .
+
+branches:
+  only:
+    - master
