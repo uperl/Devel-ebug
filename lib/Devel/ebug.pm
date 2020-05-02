@@ -111,7 +111,10 @@ sub talk {
   $socket->print($data . "\n");
   $data = <$socket>;
   if ($data) {
-    my $res = Load(pack("h*", $data));
+    my $res = do {
+      $YAML::LoadBlessed = 1;
+      Load(pack("h*", $data));
+    };
     return $res;
   }
 }

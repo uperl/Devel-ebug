@@ -141,7 +141,10 @@ sub get {
   exit unless $context->{socket};
   local $/= "\n";
   my $data = $context->{socket}->getline;
-  my $req = Load(pack("h*", $data));
+  my $req = do {
+    local $YAML::LoadBlessed = 1;
+    Load(pack("h*", $data));
+  };
   push @{ $context->{history} }, $req
     if exists $commands{ $req->{command} }->{record};
   return $req;
