@@ -6,7 +6,7 @@ perl:
 
 before_script:
   - cpanm -nq
-  --installdeps .
+  - --installdeps .
 
 branches:
   only:
