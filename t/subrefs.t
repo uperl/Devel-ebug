@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use lib 'lib';
-use Test::More tests => 30;
+use Test::More 0.94 tests => 30;
 use Devel::ebug;
 
 note "First we'll step over the subref";
