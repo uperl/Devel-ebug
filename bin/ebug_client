@@ -1,4 +1,6 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
+
+use lib::findbin '../lib'; # dev-only
 
 =head1 NAME
 
