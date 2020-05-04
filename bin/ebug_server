@@ -19,7 +19,7 @@ When invoked, it will show you how to invoke ebug-client.
 
  # Run hello.pl and wait for "ebug-client" to attach
  $ ebug-server -- hello.pl
-
+ 
  # Same as above, but keep I/O happen on server side
  $ ebug-server -keepio -- hello.pl
 

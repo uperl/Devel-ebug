@@ -101,7 +101,7 @@ sub watch_point {
 sub break_on_load {
   my $self = shift;
   my($filename) = @_;
-  
+
   my $response = $self->talk({
     command   => "break_on_load",
     filename  => $filename,

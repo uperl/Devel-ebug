@@ -42,7 +42,7 @@ sub run {
     return unless $line =~ s/^x //;
     my @result = grep { /^\Q$line/ } keys %$pad;
     if ($line =~ /^[\$\@]/) {
-      @result = map { s/^[\$\@]//; $_ } @result;
+      s/^[\$\@]// for @result;
     }
     return @result;
   };

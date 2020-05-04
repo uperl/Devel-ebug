@@ -9,7 +9,7 @@ my $stdout = "";
 my $stderr = "";
 
 if ($ENV{PERL_DEBUG_DONT_RELAY_IO}) {
-  open NULL, ">/dev/null";
+  open NULL, '>', '/dev/null';
   open NULL, '>', \$stdout;
   open NULL, '>', \$stderr;
 }
@@ -31,4 +31,5 @@ sub output {
     stderr => $stderr,
   };
 }
+
 1;
