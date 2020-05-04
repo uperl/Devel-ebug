@@ -173,8 +173,8 @@ sub sub {
     $DB::single = $frame->{single};
     $DB::single = 0 if defined $context->{mode} && $context->{mode} eq 'run' && !@{$context->{watch_points}};
 
-    if ($frame->{return}) {
-      return @{ $frame->{return} };
+    if ($frame->{'return'}) {
+      return @{ $frame->{'return'} };
     } else {
       return @ret;
     }
@@ -184,8 +184,8 @@ sub sub {
     $DB::single = $frame->{single};
     $DB::single = 0 if defined $context->{mode} && $context->{mode} eq 'run' && !@{$context->{watch_points}};
 
-    if ($frame->{return}) {
-      return $frame->{return}->[0];
+    if ($frame->{'return'}) {
+      return $frame->{'return'}->[0];
     } else {
       return $ret;
     }
