@@ -10,7 +10,7 @@ use Proc::Background;
 use String::Koremutake;
 use YAML;
 use Module::Pluggable require => 1;
-
+use File::Which ();
 use FindBin qw($Bin);  ## no critic (Freenode::DiscouragedModules)
 
 use base qw(Class::Accessor::Chained::Fast);
@@ -39,7 +39,11 @@ sub load {
   my $port   = 3141 + ($rand % 1024);
 
   $ENV{SECRET} = $secret;
-  my $backend = $self->backend || "$Bin/ebug_backend_perl";
+  my $backend = $self->backend || do {
+    -x "$Bin/ebug_backend_perl"
+      ? "$Bin/ebug_backend_perl"
+      : File::Which::which("ebug_backend_perl");
+  };
   my $command = "$backend $program";;
   my $proc = Proc::Background->new(
     {'die_upon_destroy' => 1},
