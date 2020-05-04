@@ -36,13 +36,13 @@ jobs:
           perl -V > perlversion.txt
           dir perlversion.txt
 
-#      - name: Cache CPAN modules
-#        uses: actions/cache@v1
-#        with:
-#          path: c:\cx
-#          key: ${{ runner.os }}-build-${{ hashFiles('perlversion.txt') }}
-#          restore-keys: |
-#            ${{ runner.os }}-build-${{ hashFiles('perlversion.txt') }}
+      - name: Cache CPAN modules
+        uses: actions/cache@v1
+        with:
+          path: c:\cx
+          key: ${{ runner.os }}-build-${{ hashFiles('perlversion.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ hashFiles('perlversion.txt') }}
 
       - name: Install Static Dependencies
         run: |
