@@ -3,6 +3,7 @@ package Devel::ebug::Backend::Plugin::Ping;
 use strict;
 use warnings;
 
+# VERSION
 
 sub register_commands {
     return ( ping => { sub => \&ping } );

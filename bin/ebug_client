@@ -2,9 +2,9 @@
 
 use lib::findbin '../lib'; # dev-only
 
-=head1 NAME
-
-ebug-client - Debugger client for remote debugging Perl script
+# PODNAME: ebug_client
+# ABSTRACT: Debugger client for remote debugging Perl script
+# VERSION
 
 =head1 SYNOPSIS
 
@@ -42,11 +42,7 @@ a complete ripoff of Devel::ebug source.
 
 L<Devel::debug>, L<ebug>, L<ebug-server>
 
-=head1 AUTHOR
-
-Taisuke Yamada, <tyamadajp!list!rakugaki!org>
-
-=cut
+=head1 cut
 
 package Devel::ebug;
 
@@ -55,7 +51,6 @@ use IO::Socket::INET;
 use strict;
 use warnings;
 
-our $VERSION = $Devel::ebug::VERSION;
 our $ARG     = {};
 
 # Replace 'load' with one that just attaches

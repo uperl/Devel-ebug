@@ -3,6 +3,8 @@ package Devel::ebug::Backend::Plugin::Run;
 use strict;
 use warnings;
 
+# VERSION
+
 sub register_commands {
     return (
       next        => { sub => \&next, record => 1 },

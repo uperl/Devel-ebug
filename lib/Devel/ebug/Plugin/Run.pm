@@ -5,6 +5,8 @@ use warnings;
 use base qw(Exporter);
 our @EXPORT = qw(undo run return step next);
 
+# VERSION
+
 # undo
 sub undo {
   my($self, $levels) = @_;

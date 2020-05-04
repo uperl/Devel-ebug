@@ -3,5 +3,17 @@
 use strict;
 use warnings;
 use lib::findbin '../lib'; # dev-only
+
+# PODNAME: ebug_backend_perl
+# ABSTRACT: Backend for ebug
+# VERSION
+
+=head1 SEE ALSO
+
+L<Devel::ebug>
+
+=cut
+
 my $program = "@ARGV";
 exec("$^X -Ilib -d:ebug::Backend $program");
+

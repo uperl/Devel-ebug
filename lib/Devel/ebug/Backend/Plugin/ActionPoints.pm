@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use File::Spec;
 
+# VERSION
+
 sub register_commands {
   return (
   break_point => { sub => \&break_point, record => 1 },

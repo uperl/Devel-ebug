@@ -3,6 +3,8 @@ package Devel::ebug::Backend::Plugin::Filenames;
 use strict;
 use warnings;
 
+# VERSION
+
 sub register_commands {
     return ( filenames   => { sub => \&filenames } );
 

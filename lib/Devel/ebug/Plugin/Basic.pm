@@ -5,6 +5,8 @@ use warnings;
 use base qw(Exporter);
 our @EXPORT = qw(basic);
 
+# VERSION
+
 # get basic debugging information
 sub basic {
   my ($self) = @_;

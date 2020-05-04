@@ -3,6 +3,7 @@ package Devel::ebug::Backend::Plugin::Eval;
 use strict;
 use warnings;
 
+# VERSION
 
 sub register_commands {
   return (
