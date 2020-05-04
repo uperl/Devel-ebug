@@ -1,5 +1,7 @@
-Revision history for Perl module Devel::ebug
+Revision history for {{$dist->name}}},
 
+{{$NEXT}}
+  - New maintainer.
   - Fixed compatability with YAML 1.30 (gh#19, gh#22)
 
 0.59 2017.03.12

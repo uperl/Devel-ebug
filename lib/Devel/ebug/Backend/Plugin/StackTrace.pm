@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use Devel::StackTrace;
 
+# VERSION
+
 sub register_commands {
     return ( stack_trace => { sub => \&stack_trace } );
 

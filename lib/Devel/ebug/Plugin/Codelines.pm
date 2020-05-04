@@ -5,6 +5,8 @@ use warnings;
 use base qw(Exporter);
 our @EXPORT = qw(codelines);
 
+# VERSION
+
 # return some lines of code
 sub codelines {
   my($self) = shift;

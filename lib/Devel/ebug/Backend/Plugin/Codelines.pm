@@ -3,6 +3,8 @@ package Devel::ebug::Backend::Plugin::Codelines;
 use strict;
 use warnings;
 
+# VERSION
+
 sub register_commands {
     return ( codelines   => { sub => \&codelines } );
 

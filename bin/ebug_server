@@ -1,8 +1,8 @@
 #!/usr/bin/env perl
 
-=head1 NAME
-
-ebug-server - Debugger server for remote debugging Perl script
+# PODNAME: ebug_client
+# ABSTRACT: Debugger server for remote debugging Perl script
+# VERSION
 
 =head1 SYNOPSIS
 
@@ -35,10 +35,6 @@ remote debugging.
 =head1 SEE ALSO
 
 L<Devel::debug>, L<ebug>, L<ebug-client>
-
-=head1 AUTHOR
-
-Taisuke Yamada, <tyamadajp!list!rakugaki!org>
 
 =cut
 

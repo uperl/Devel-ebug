@@ -3,6 +3,8 @@ package Devel::ebug::Backend::Plugin::Output;
 use strict;
 use warnings;
 
+# VERSION
+
 my $stdout = "";
 my $stderr = "";
 

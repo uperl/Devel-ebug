@@ -5,6 +5,8 @@ use warnings;
 use base qw(Exporter);
 our @EXPORT = qw(break_point break_point_delete break_point_subroutine break_points break_points_with_condition all_break_points_with_condition watch_point break_on_load);
 
+# VERSION
+
 # set a break point (by default in the current file)
 sub break_point {
   my $self = shift;

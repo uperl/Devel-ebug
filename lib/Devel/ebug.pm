@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Carp;
 use Class::Accessor::Chained::Fast;
-use Devel::StackTrace;
+use Devel::StackTrace 2.00;
 use IO::Socket::INET;
 use Proc::Background;
 use String::Koremutake;
@@ -14,6 +14,10 @@ use Module::Pluggable require => 1;
 use FindBin qw($Bin);
 
 use base qw(Class::Accessor::Chained::Fast);
+
+# ABSTRACT: A simple, extensible Perl debugger
+# VERSION
+
 __PACKAGE__->mk_accessors(qw(
     backend
     port
@@ -122,13 +126,6 @@ sub talk {
 
 __END__
 
-=head1 NAME
-
-Devel::ebug - A simple, extensible Perl debugger
-
-=for html
-<a href="https://travis-ci.org/awwaiid/Devel-ebug"><img src="https://travis-ci.org/awwaiid/Devel-ebug.png"></a>
-
 =head1 SYNOPSIS
 
   use Devel::ebug;
@@ -211,7 +208,7 @@ L<Devel::ebug>, which you interact with. The frontend starts the code
 you are debugging in the background under the backend (running it
 under perl -d:ebug code.pl). The backend starts a TCP server, which
 the frontend then connects to, and uses this to drive the
-backend. This adds some flexibilty in the debugger. There is some
+backend. This adds some flexibility in the debugger. There is some
 minor security in the client/server startup (a secret word), and a
 random port is used from 3141-4165 so that multiple debugging sessions
 can happen concurrently.
@@ -241,7 +238,7 @@ The load method loads the program and gets ready to debug it:
 =head2 break_point
 
 The break_point method sets a break point in a program. If you are
-run-ing through a program, the execution will stop at a break point.
+running through a program, the execution will stop at a break point.
 Break points can be set in a few ways.
 
 A break point can be set at a line number in the current file:
@@ -362,12 +359,12 @@ It can return a span of code lines in a file:
 =head2 eval
 
 The eval method evaluates Perl code in the current program and returns
-the result. If the evalutation results in an exception, C<$@> is
+the result. If the evaluation results in an exception, C<$@> is
 returned.
 
   my $v = $ebug->eval('2 ** $exp');
 
-In list context, eval also returns a flag indicating if the evalutation
+In list context, eval also returns a flag indicating if the evaluation
 resulted in an exception.
 
   my( $v, $is_exception ) = $ebug->eval('die 123');
@@ -483,7 +480,7 @@ The stack_trace_human method returns the current stack trace in a human-readable
 
 =head2 undo
 
-The undo method undos the last action. It accomplishes this by
+The undo method undoes the last action. It accomplishes this by
 restarting the process and passing (almost) all the previous commands
 to it. Note that commands which do not change state are
 ignored. Commands that change state are: break_point, break_point_delete,
@@ -498,7 +495,7 @@ It can also undo multiple commands:
 =head2 watch_point
 
 The watch point method sets a watch point. A watch point has a
-condition, and the debugger will stop run-ing as soon as this
+condition, and the debugger will stop running as soon as this
 condition is true:
 
   $ebug->watch_point('$x > 100');
@@ -520,18 +517,4 @@ Devel::ebug does not quite work under 5.8.0.
 
 Devel::ebug does not handle signals under Windows.
 
-=head1 AUTHOR
-
-Latest releases by Brock Wilcox, C<< <awwaiid@thelackthereof.org> >>
-
-Leon Brocard, C<< <acme@astray.com> >>
-
-=head1 COPYRIGHT
-
-Copyright (C) 2005-2008, Leon Brocard
-Copyright (C) 2011-NOW, Brock Wilcox
-
-=head1 LICENSE
-
-This module is free software; you can redistribute it or modify it
-under the same terms as Perl itself.
+=cut

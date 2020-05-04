@@ -3,6 +3,8 @@ package Devel::ebug::Backend::Plugin::Basic;
 use strict;
 use warnings;
 
+# VERSION
+
 sub register_commands {
   return (basic => { sub => \&basic });
 }

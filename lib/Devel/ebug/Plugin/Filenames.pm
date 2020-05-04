@@ -5,6 +5,8 @@ use warnings;
 use base qw(Exporter);
 our @EXPORT = qw(filenames);
 
+# VERSION
+
 # list filenames
 sub filenames {
   my($self) = @_;

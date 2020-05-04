@@ -5,6 +5,8 @@ use warnings;
 use base qw(Exporter);
 our @EXPORT = qw(pad pad_human);
 
+# VERSION
+
 # find the pad
 sub pad {
   my($self) = @_;

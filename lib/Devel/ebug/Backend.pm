@@ -1,7 +1,12 @@
-package DB;
+package Devel::ebug::Backend;
 
 use strict;
 use warnings;
+
+# VERSION
+
+package DB;
+
 use IO::Socket::INET;
 use String::Koremutake;
 use YAML;
@@ -10,6 +15,8 @@ use Module::Pluggable
   require     => 1;
 
 use vars qw(@dbline %dbline);
+
+# VERSION
 
 # Let's catch INT signals and set a flag when they occur
 $SIG{INT} = sub {

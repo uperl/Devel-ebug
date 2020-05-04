@@ -5,6 +5,8 @@ use warnings;
 use base qw(Exporter);
 our @EXPORT = qw(output);
 
+# VERSION
+
 # return stdout, stderr
 sub output {
   my($self) = @_;

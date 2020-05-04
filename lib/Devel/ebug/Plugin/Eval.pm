@@ -5,6 +5,8 @@ use warnings;
 use base qw(Exporter);
 our @EXPORT = qw(eval yaml);
 
+# VERSION
+
 # eval
 sub eval {
   my($self, $eval) = @_;

@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use PadWalker;
 
+# VERSION
+
 sub register_commands {
   return ( pad => { sub => \&DB::pad } )
 }

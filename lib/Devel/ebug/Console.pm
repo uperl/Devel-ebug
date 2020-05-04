@@ -1,5 +1,7 @@
 package Devel::ebug::Console;
 
+# VERSION
+
 use strict;
 use warnings;
 use lib 'lib';
@@ -206,20 +208,11 @@ Devel::ebug::Console - Console front end to Devel::ebug
 
 =head1 DESCRIPTION
 
-L<Devel::ebug::Console> is an interactive commmand-line front end to L<Devel::ebug>. It
+L<Devel::ebug::Console> is an interactive command-line front end to L<Devel::ebug>. It
 is a simple Perl debugger, much like perl5db.pl.
 
 =head1 SEE ALSO
 
 L<Devel::ebug>, L<ebug>
 
-=head1 AUTHOR
-
-Leon Brocard, C<< <acme@astray.com> >>
-
-=head1 COPYRIGHT
-
-Copyright (C) 2005, Leon Brocard
-
-This program is free software; you can redistribute it or modify it
-under the same terms as Perl itself.
+=cut
