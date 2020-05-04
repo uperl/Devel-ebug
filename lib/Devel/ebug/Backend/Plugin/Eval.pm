@@ -23,7 +23,7 @@ sub eval {
   my $eval = $req->{eval};
   local $SIG{__WARN__} = sub {};
 
-  my $v = eval "package $context->{package}; $eval";
+  my $v = eval "package $context->{package}; $eval";  ## no critic (BuiltinFunctions::ProhibitStringyEval)
   if ($@) {
     return { eval => $@, exception => 1 };
   } else {
@@ -36,7 +36,7 @@ sub yaml {
   my $eval = $req->{yaml};
   local $SIG{__WARN__} = sub {};
 
-  my $v = eval "package $context->{package}; use YAML; Dump($eval)";
+  my $v = eval "package $context->{package}; use YAML; Dump($eval)";  ## no critic (BuiltinFunctions::ProhibitStringyEval)
   if ($@) {
     return { yaml => $@ };
   } else {
