@@ -183,7 +183,7 @@ sub sub {
     my $frame = pop @{ $context->{stack} };
     $DB::single = $frame->{single};
     $DB::single = 0 if defined $context->{mode} && $context->{mode} eq 'run' && !@{$context->{watch_points}};
-    
+
     if ($frame->{return}) {
       return $frame->{return}->[0];
     } else {
@@ -225,7 +225,7 @@ sub fetch_codelines {
   @codelines = map { defined($_) ? $_ : "" } @codelines;
 
   # remove newlines
-  @codelines = map { $_ =~ s/\s+$//; $_ } @codelines;
+  s/\s+$// for @codelines;
 
   # we run it with -d:ebug::Backend, so remove this extra line
   @codelines = grep { $_ ne 'use Devel::ebug::Backend;' } @codelines;
@@ -233,7 +233,7 @@ sub fetch_codelines {
   # for some reasons, the perl internals leave the opening POD line
   # around but strip the rest. so let's strip the opening POD line
   @codelines =
-    map { $_ =~ /^=(head|over|item|back|over|cut|pod|begin|end|for)/ ? "" : $_ }
+    map { /^=(head|over|item|back|over|cut|pod|begin|end|for)/ ? "" : $_ }
     @codelines;
 
   if (@lines) {

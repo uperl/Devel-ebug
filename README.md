@@ -5,50 +5,50 @@ A simple, extensible Perl debugger
 # SYNOPSIS
 
 ```perl
-use Devel::ebug;
-my $ebug = Devel::ebug->new;
-$ebug->program("calc.pl");
-$ebug->load;
+ use Devel::ebug;
+ my $ebug = Devel::ebug->new;
+ $ebug->program("calc.pl");
+ $ebug->load;
 
-print "At line: "       . $ebug->line       . "\n";
-print "In subroutine: " . $ebug->subroutine . "\n";
-print "In package: "    . $ebug->package    . "\n";
-print "In filename: "   . $ebug->filename   . "\n";
-print "Code: "          . $ebug->codeline   . "\n";
-$ebug->step;
-$ebug->step;
-$ebug->next;
-my($stdout, $stderr) = $ebug->output;
-my $actual_line = $ebug->break_point(6);
-$ebug->break_point(6, '$e == 4');
-$ebug->break_point("t/Calc.pm", 29);
-$ebug->break_point("t/Calc.pm", 29, '$i == 2');
-$ebug->break_on_load("t/Calc.pm");
-my $actual_line = $ebug->break_point_subroutine("main::add");
-$ebug->break_point_delete(29);
-$ebug->break_point_delete("t/Calc.pm", 29);
-my @filenames    = $ebug->filenames();
-my @break_points = $ebug->break_points();
-my @break_points = $ebug->break_points("t/Calc.pm");
-my @break_points = $ebug->break_points_with_condition();
-my @break_points = $ebug->break_points_with_condition("t/Calc.pm");
-my @break_points = $ebug->all_break_points_with_condition();
-$ebug->watch_point('$x > 100');
-my $codelines = $ebug->codelines(@span);
-$ebug->run;
-my $pad  = $ebug->pad;
-foreach my $k (sort keys %$pad) {
-  my $v = $pad->{$k};
-  print "Variable: $k = $v\n";
-}
-my $v = $ebug->eval('2 ** $exp');
-my( $v, $is_exception ) = $ebug->eval('die 123');
-my $y = $ebug->yaml('$z');
-my @frames = $ebug->stack_trace;
-my @frames2 = $ebug->stack_trace_human;
-$ebug->undo;
-$ebug->return;
-print "Finished!\n" if $ebug->finished;
+ print "At line: "       . $ebug->line       . "\n";
+ print "In subroutine: " . $ebug->subroutine . "\n";
+ print "In package: "    . $ebug->package    . "\n";
+ print "In filename: "   . $ebug->filename   . "\n";
+ print "Code: "          . $ebug->codeline   . "\n";
+ $ebug->step;
+ $ebug->step;
+ $ebug->next;
+ my($stdout, $stderr) = $ebug->output;
+ my $actual_line = $ebug->break_point(6);
+ $ebug->break_point(6, '$e == 4');
+ $ebug->break_point("t/Calc.pm", 29);
+ $ebug->break_point("t/Calc.pm", 29, '$i == 2');
+ $ebug->break_on_load("t/Calc.pm");
+ my $actual_line = $ebug->break_point_subroutine("main::add");
+ $ebug->break_point_delete(29);
+ $ebug->break_point_delete("t/Calc.pm", 29);
+ my @filenames    = $ebug->filenames();
+ my @break_points = $ebug->break_points();
+ my @break_points = $ebug->break_points("t/Calc.pm");
+ my @break_points = $ebug->break_points_with_condition();
+ my @break_points = $ebug->break_points_with_condition("t/Calc.pm");
+ my @break_points = $ebug->all_break_points_with_condition();
+ $ebug->watch_point('$x > 100');
+ my $codelines = $ebug->codelines(@span);
+ $ebug->run;
+ my $pad  = $ebug->pad;
+ foreach my $k (sort keys %$pad) {
+   my $v = $pad->{$k};
+   print "Variable: $k = $v\n";
+ }
+ my $v = $ebug->eval('2 ** $exp');
+ my( $v, $is_exception ) = $ebug->eval('die 123');
+ my $y = $ebug->yaml('$z');
+ my @frames = $ebug->stack_trace;
+ my @frames2 = $ebug->stack_trace_human;
+ $ebug->undo;
+ $ebug->return;
+ print "Finished!\n" if $ebug->finished;
 ```
 
 # DESCRIPTION

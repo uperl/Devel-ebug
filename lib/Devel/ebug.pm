@@ -91,15 +91,15 @@ sub attach {
 # FIXME : this would mean that plugin writers don't need to Export stuff
 #
 #sub load_plugins {
-#    my $self = shift;    
+#    my $self = shift;
 #    my $obj = Devel::Symdump->new($self->plugins);
-#    
+#
 #    for ($obj->functions) {
 #        my $name = (split /::/)[-1];
 #        next if substr($name,0,1) eq '_';
 #        *basic = \&$_;
 #    }
-#    
+#
 #}
 
 
@@ -132,7 +132,7 @@ __END__
   my $ebug = Devel::ebug->new;
   $ebug->program("calc.pl");
   $ebug->load;
-
+ 
   print "At line: "       . $ebug->line       . "\n";
   print "In subroutine: " . $ebug->subroutine . "\n";
   print "In package: "    . $ebug->package    . "\n";

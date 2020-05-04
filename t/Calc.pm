@@ -7,7 +7,7 @@ our $VERSION = "0.29";
 
 sub add {
   my($self, $l, $r) = @_;
-  
+
   return $l + $r;
 }
 

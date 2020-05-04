@@ -10,26 +10,19 @@ my %modules;
 my $post_diag;
 
 $modules{$_} = $_ for qw(
-  Carp
-  Class::Accessor::Chained::Fast
+  Class::Accessor::Chained
   Devel::StackTrace
-  Exporter
   ExtUtils::MakeMaker
-  File::Spec
   FindBin
-  Getopt::Long
   IO::Socket::INET
   Module::Pluggable
   PadWalker
   Proc::Background
-  Scalar::Util
   String::Koremutake
   Term::ReadLine
   Test::Expect
   Test::More
   YAML
-  lib
-  vars
 );
 
 

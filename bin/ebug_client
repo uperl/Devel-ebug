@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+use strict;
+use warnings;
 use lib::findbin '../lib'; # dev-only
 
 # PODNAME: ebug_client
@@ -48,8 +50,6 @@ package Devel::ebug;
 
 use Devel::ebug;
 use IO::Socket::INET;
-use strict;
-use warnings;
 
 our $ARG     = {};
 
@@ -63,8 +63,6 @@ package main;
 
 use Devel::ebug::Console;
 use Getopt::Long;
-use strict;
-use warnings;
 
 GetOptions( my $OPT = {}, 'help', 'port=i', 'key=s' ) || help();
 help() if $OPT->{help};
@@ -80,4 +78,3 @@ Usage: $0 -key <secret> -port <port> -- debuggee args...
 EOF
     exit(1);
 }
-

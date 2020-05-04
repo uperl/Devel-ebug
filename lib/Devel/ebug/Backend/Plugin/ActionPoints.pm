@@ -13,7 +13,7 @@ sub register_commands {
   break_points_with_condition => { sub => \&break_points_with_condition },
   all_break_points_with_condition => { sub => \&all_break_points_with_condition },
   break_point_delete => { sub => \&break_point_delete, record => 1 },
-  break_point_subroutine => { sub => \&break_point_subroutine, record => 1 },  
+  break_point_subroutine => { sub => \&break_point_subroutine, record => 1 },
   watch_point => { sub => \&watch_point, record => 1 },
   break_on_load => { sub => \&break_on_load },
   );
@@ -115,7 +115,7 @@ sub set_break_point {
 sub break_on_load{
   my($req, $context) = @_;
   my $filename = $req->{filename};
-  
+
   $DB::break_on_load{$filename} = 1;
 
   if (!File::Spec->file_name_is_absolute( $filename )){
@@ -123,7 +123,7 @@ sub break_on_load{
     $filename = File::Spec->rel2abs( $filename);
     $DB::break_on_load{$filename} = 1;
   }
-       
+
   return {};
 }
 

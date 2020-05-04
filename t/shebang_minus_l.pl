@@ -2,7 +2,7 @@
 
 my @a = (3, 6, 2, 19, 5);
 
-for $n (sort { $a <=> $b } @a) {
+for my $n (sort { $a <=> $b } @a) {
     print $n;
 }
 
