@@ -1,7 +1,7 @@
 #!perl
 use strict;
 use warnings;
-use lib "t";
+use lib "corpus/lib";
 use Calc;
 
 my $calc = Calc->new;

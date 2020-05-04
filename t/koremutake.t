@@ -6,13 +6,13 @@ use Test::More tests => 3;
 use Devel::ebug;
 
 my $ebug = Devel::ebug->new;
-$ebug->program("t/koremutake.pl");
+$ebug->program("corpus/koremutake.pl");
 $ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 $ebug->run;
 
 $ebug = Devel::ebug->new;
-$ebug->program("t/koremutake.pl");
+$ebug->program("corpus/koremutake.pl");
 $ebug->backend("$^X bin/ebug_backend_perl");
 $ebug->load;
 my $filename = (grep /Koremutake/, $ebug->filenames)[0];

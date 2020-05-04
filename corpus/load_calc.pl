@@ -3,7 +3,7 @@
 my $q = 1;
 my $w = 2;
 
-use lib "t";
+use lib "corpus/lib";
 eval "use Calc";
 
 
