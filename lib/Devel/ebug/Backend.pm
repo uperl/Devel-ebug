@@ -253,7 +253,8 @@ sub END {
   DB::fake::at_exit();
 }
 
-package DB::fake;
+package
+  DB::fake;
 
 sub at_exit {
   1;
