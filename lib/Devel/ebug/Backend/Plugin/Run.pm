@@ -24,7 +24,7 @@ sub next {
 sub return {
   my($req, $context) = @_;
   if ($req->{values}) {
-    $context->{stack}->[0]->{return} = $req->{values};
+    $context->{stack}->[0]->{'return'} = $req->{values};
   }
   $context->{mode} = "return"; # run until returned from subroutine
   $DB::single = 0; # run
