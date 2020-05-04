@@ -58,7 +58,7 @@ sub DB {
     my %delete;
     foreach my $watch_point (@{ $context->{watch_points} }) {
       local $SIG{__WARN__} = sub { };
-      my $v = eval "package $package; $watch_point";
+      my $v = eval "package $package; $watch_point";  ## no critic (BuiltinFunctions::ProhibitStringyEval)
       if ($v) {
         $context->{watch_single} = 1;
         $delete{$watch_point} = 1;
@@ -77,9 +77,8 @@ sub DB {
     my $condition = break_point_condition($filename, $line);
     if ($condition) {
       local $SIG{__WARN__} = sub { };
-      my $v = eval "package $package; $condition";
+      my $v = eval "package $package; $condition";  ## no critic (BuiltinFunctions::ProhibitStringyEval)
       unless ($v) {
-
         # condition not true, go back to running
         $DB::single = 0;
         return;
@@ -194,7 +193,7 @@ sub sub {
 
 sub DB::postponed {
     # If this is a subroutine, let postponed_sub() deal with it.
-    return &postponed_sub unless ref \$_[0] eq 'GLOB';
+    goto &postponed_sub unless ref \$_[0] eq 'GLOB';
 
     my ($filePath) = @_;
     $filePath =~ s/^.*_<//;

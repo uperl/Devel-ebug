@@ -9,9 +9,10 @@ my $stdout = "";
 my $stderr = "";
 
 if ($ENV{PERL_DEBUG_DONT_RELAY_IO}) {
-  open NULL, '>', '/dev/null';
-  open NULL, '>', \$stdout;
-  open NULL, '>', \$stderr;
+  # TODO: can we change these to non-bareword file handles
+  open NULL, '>', '/dev/null';  ## no critic
+  open NULL, '>', \$stdout;     ## no critic
+  open NULL, '>', \$stderr;     ## no critic
 }
 else {
   close STDOUT;

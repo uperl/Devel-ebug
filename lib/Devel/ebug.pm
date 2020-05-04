@@ -31,7 +31,7 @@ sub load {
   my $program = $self->program;
 
   # import all the plugins into our namespace
-  do { eval "use $_ " } for $self->plugins;
+  eval { $_->import } for $self->plugins;
 
   my $k = String::Koremutake->new;
   my $rand = int(rand(100_000));
@@ -60,7 +60,7 @@ sub attach {
     my ($self, $port, $key) = @_;
 
     # import all the plugins into our namespace
-    do { eval "use $_ " } for $self->plugins;
+    eval { $_->import } for $self->plugins;
 
     # try and connect to the server
     my $socket;
@@ -123,6 +123,8 @@ sub talk {
       Load(pack("h*", $data));
     };
     return $res;
+  } else {
+    return undef;
   }
 }
 

@@ -20,10 +20,10 @@ sub pad {
   my $h = eval { PadWalker::peek_my(2) };
   foreach my $k (sort keys %$h) {
     if ($k =~ /^@/) {
-      my @v = eval "package $context->{package}; ($k)";
+      my @v = eval "package $context->{package}; ($k)";  ## no critic (BuiltinFunctions::ProhibitStringyEval)
       $pad->{$k} = \@v;
     } else {
-      my $v = eval "package $context->{package}; $k";
+      my $v = eval "package $context->{package}; $k";    ## no critic (BuiltinFunctions::ProhibitStringyEval)
       $pad->{$k} = $v;
 
       # workaround for blessed globs
