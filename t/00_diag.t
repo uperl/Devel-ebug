@@ -13,6 +13,7 @@ $modules{$_} = $_ for qw(
   Class::Accessor::Chained
   Devel::StackTrace
   ExtUtils::MakeMaker
+  File::Which
   FindBin
   IO::Socket::INET
   Module::Pluggable
