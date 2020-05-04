@@ -12,7 +12,7 @@ plan skip_all => "Expect::Simple required for testing ebug: $@" if $@;
 plan tests => 4;
 
 expect_run(
-  command => "PERL_RL=\"o=0\" $^X bin/ebug --backend \"$^X bin/ebug_backend_perl\" t/shebang_minus_l.pl",
+  command => "PERL_RL=\"o=0\" $^X bin/ebug --backend \"$^X bin/ebug_backend_perl\" corpus/shebang_minus_l.pl",
   prompt  => 'ebug: ',
   quit    => 'q',
 );
