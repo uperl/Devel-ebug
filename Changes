@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}},
 
 {{$NEXT}}
+
+0.60      2020-05-04 15:05:27 -0600
   - New maintainer.
   - Fixed compatability with YAML 1.30 (gh#19, gh#22)
 
