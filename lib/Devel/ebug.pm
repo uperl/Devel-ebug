@@ -69,7 +69,6 @@ sub attach {
             PeerAddr   => "localhost",
             PeerPort   => $port,
             Proto      => 'tcp',
-            Reuse      => 1,
             ReuseAddr => 1,
         );
         last if $socket;
