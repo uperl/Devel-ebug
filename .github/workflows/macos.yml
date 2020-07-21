@@ -39,7 +39,7 @@ jobs:
       - name: Cache CPAN modules
         uses: actions/cache@v1
         with:
-         path: ~/perl5
+          path: ~/perl5
           key: ${{ runner.os }}-build-${{ hashFiles('perlversion.txt') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ hashFiles('perlversion.txt') }}
