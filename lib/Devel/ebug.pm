@@ -70,7 +70,7 @@ sub attach {
             PeerPort   => $port,
             Proto      => 'tcp',
             Reuse      => 1,
-            ReuserAddr => 1,
+            ReuseAddr => 1,
         );
         last if $socket;
         sleep 1;
