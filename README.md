@@ -1,4 +1,4 @@
-# Devel::ebug [![Build Status](https://travis-ci.org/plicease/Devel-ebug.svg)](http://travis-ci.org/plicease/Devel-ebug)
+# Devel::ebug ![linux](https://github.com/uperl/Devel-ebug/workflows/linux/badge.svg) ![macos](https://github.com/uperl/Devel-ebug/workflows/macos/badge.svg) ![windows](https://github.com/uperl/Devel-ebug/workflows/windows/badge.svg) ![cygwin](https://github.com/uperl/Devel-ebug/workflows/cygwin/badge.svg) ![msys2-mingw](https://github.com/uperl/Devel-ebug/workflows/msys2-mingw/badge.svg)
 
 A simple, extensible Perl debugger
 
