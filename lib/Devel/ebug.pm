@@ -11,7 +11,7 @@ use String::Koremutake;
 use YAML;
 use Module::Pluggable require => 1;
 use File::Which ();
-use FindBin qw($Bin);  ## no critic (Freenode::DiscouragedModules)
+use FindBin qw($Bin);  ## no critic (Community::DiscouragedModules)
 
 use base qw(Class::Accessor::Chained::Fast);
 

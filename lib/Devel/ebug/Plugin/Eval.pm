@@ -14,7 +14,7 @@ sub eval {
     command => "eval",
     eval    => $eval,
   });
-  return wantarray ? ( $response->{eval}, $response->{exception} ) :  ##  no critic (Freenode::Wantarray)
+  return wantarray ? ( $response->{eval}, $response->{exception} ) :  ##  no critic (Community::Wantarray)
                      $response->{eval};
 }
 
