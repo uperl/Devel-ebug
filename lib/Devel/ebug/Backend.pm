@@ -166,7 +166,7 @@ sub sub {
   $DB::single = 0 if defined $context->{mode} && $context->{mode} eq 'next';
 
   no strict 'refs';
-  if (wantarray) { ## no critic (Freenode::Wantarray)
+  if (wantarray) { ## no critic (Community::Wantarray)
     my @ret   = &$sub;
     my $frame = pop @{ $context->{stack} };
     $DB::single = $frame->{single};
