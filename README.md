@@ -471,13 +471,20 @@ my $y = $ebug->yaml('$z');
 
 # SEE ALSO
 
-[perldebguts](https://metacpan.org/pod/perldebguts)
+- [perldebguts](https://metacpan.org/pod/perldebguts)
 
-# BUGS
+    The guts of debugging Perl
 
-Devel::ebug does not quite work under 5.8.0.
+- [Devel::Chitin](https://metacpan.org/pod/Devel::Chitin)
 
-Devel::ebug does not handle signals under Windows.
+    A class that exposes the Perl debugging facilities as an API, with
+    some functional overlap with [Devel::ebug](https://metacpan.org/pod/Devel::ebug).
+
+# CAVEATS
+
+[Devel::ebug](https://metacpan.org/pod/Devel::ebug) does not support Perls prior to 5.10.1.
+
+[Devel::ebug](https://metacpan.org/pod/Devel::ebug) does not handle signals under Windows.
 
 # AUTHOR
 
