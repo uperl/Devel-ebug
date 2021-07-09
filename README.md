@@ -97,7 +97,7 @@ can happen concurrently.
 
 ## new
 
-The constructor creats a Devel::ebug object:
+The constructor creats a [Devel::ebug](https://metacpan.org/pod/Devel::ebug) object:
 
 ```perl
 my $ebug = Devel::ebug->new;
@@ -479,6 +479,14 @@ my $y = $ebug->yaml('$z');
 
     A class that exposes the Perl debugging facilities as an API, with
     some functional overlap with [Devel::ebug](https://metacpan.org/pod/Devel::ebug).
+
+- [ebug](https://metacpan.org/pod/ebug)
+
+    Command-line interface to [Devel::ebug](https://metacpan.org/pod/Devel::ebug)
+
+- [ebug\_http](https://metacpan.org/pod/ebug_http)
+
+    Web based interface to [Devel::ebug](https://metacpan.org/pod/Devel::ebug)
 
 # CAVEATS
 
