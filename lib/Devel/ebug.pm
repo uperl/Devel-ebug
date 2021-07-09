@@ -222,7 +222,7 @@ can happen concurrently.
 
 =head2 new
 
-The constructor creats a Devel::ebug object:
+The constructor creats a L<Devel::ebug> object:
 
   my $ebug = Devel::ebug->new;
 
@@ -524,6 +524,14 @@ The guts of debugging Perl
 
 A class that exposes the Perl debugging facilities as an API, with
 some functional overlap with L<Devel::ebug>.
+
+=item L<ebug>
+
+Command-line interface to L<Devel::ebug>
+
+=item L<ebug_http>
+
+Web based interface to L<Devel::ebug>
 
 =back
 
