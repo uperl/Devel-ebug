@@ -514,12 +514,23 @@ the result of YAML's Dump() method:
 
 =head1 SEE ALSO
 
-L<perldebguts>
+=over 4
 
-=head1 BUGS
+=item L<perldebguts>
 
-Devel::ebug does not quite work under 5.8.0.
+The guts of debugging Perl
 
-Devel::ebug does not handle signals under Windows.
+=item L<Devel::Chitin>
+
+A class that exposes the Perl debugging facilities as an API, with
+some functional overlap with L<Devel::ebug>.
+
+=back
+
+=head1 CAVEATS
+
+L<Devel::ebug> does not support Perls prior to 5.10.1.
+
+L<Devel::ebug> does not handle signals under Windows.
 
 =cut
