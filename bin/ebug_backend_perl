@@ -14,6 +14,5 @@ L<Devel::ebug>
 
 =cut
 
-my $program = "@ARGV";
-exec("$^X -Ilib -d:ebug::Backend $program");
+exec $^X, "-d:ebug::Backend", @ARGV;
 

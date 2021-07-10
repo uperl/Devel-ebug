@@ -15,8 +15,6 @@ $modules{$_} = $_ for qw(
   Expect
   Expect::Simple
   ExtUtils::MakeMaker
-  File::Which
-  FindBin
   IO::Socket::INET
   Module::Pluggable
   PadWalker
