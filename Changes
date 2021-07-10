@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}},
 
 {{$NEXT}}
+
+0.64      2021-07-10 15:42:56 -0600
   - Remove dependency on FindBin and File::Which (gh#51)
   - Improve backend fallback; no longer require
     ebug_backend_perl be in the PATH (gh#49, gh#51)
