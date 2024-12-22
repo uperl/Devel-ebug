@@ -2,4 +2,7 @@ Devel-ebug-*
 /.build/
 *.swp
 
-
+/Devel-ebug-*
+/.build
+*.old
+*.orig
