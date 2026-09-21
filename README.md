@@ -1,4 +1,4 @@
-# Devel::ebug ![linux](https://github.com/uperl/Devel-ebug/workflows/linux/badge.svg) ![macos](https://github.com/uperl/Devel-ebug/workflows/macos/badge.svg)
+# Devel::ebug ![static](https://github.com/uperl/Devel-ebug/workflows/static/badge.svg) ![linux](https://github.com/uperl/Devel-ebug/workflows/linux/badge.svg)
 
 A simple, extensible Perl debugger
 
@@ -508,7 +508,7 @@ Taisuke Yamada
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2005-2024 by Leon Brocard.
+This software is copyright (c) 2005-2026 by Leon Brocard.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
