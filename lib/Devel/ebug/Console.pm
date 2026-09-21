@@ -113,9 +113,14 @@ restart Restart the program
       print "STDOUT:\n$stdout\n";
       print "STDERR:\n$stderr\n";
     } elsif ($command eq 'r') {
-      $ebug->run;
-      # TODO: Consider using this instead:
-      # eval { $ebug->run };
+      eval { $ebug->run };
+      if ($@) {
+        die $@ unless $@ =~ /^INT/;
+        # SIGINT while the program was running: the backend already
+        # dropped into the debugger, so just refresh our view of it
+        # instead of dying back out to the shell.
+        $ebug->basic;
+      }
     } elsif ($command eq 'restart') {
       $ebug->load;
     } elsif ($command =~ /^ret ?(.*)/) {
