@@ -41,7 +41,9 @@ $handle->send("\cC");
 ok($handle->expect(10, '-re', qr/ebug:\s*$/),
   'console returned to the prompt after SIGINT instead of dying');
 
-(my $before = $handle->before // '') =~ s/\r//g;
+my $before = $handle->before;
+$before = '' unless defined $before;
+$before =~ s/\r//g;
 like($before, qr/infinite_loop\.pl#\d+/,
   'console shows the paused location in the program');
 
@@ -52,4 +54,8 @@ ok($handle->expect(10, '-re', qr/ebug:\s*$/),
 $handle->send("q\n");
 ok(1, 'quit sent');
 
+# the backend is still running (we never let the loop finish), so
+# quitting here kills it while alive; reaping that child sets $?, which
+# Test::Builder would otherwise mistake for this test having failed
 expect_quit();
+$? = 0;
