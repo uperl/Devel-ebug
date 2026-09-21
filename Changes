@@ -3,6 +3,7 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
   - Fix ^C (SIGINT) while running killing the console instead of
     dropping back into the debugger (gh#27, gh#55)
+  - Document the ebug console's interactive commands (gh#32)
 
 0.64      2021-07-10 15:42:56 -0600
   - Remove dependency on FindBin and File::Which (gh#51)
