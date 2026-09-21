@@ -535,4 +535,16 @@ L<Devel::ebug> does not support Perls prior to 5.10.1.
 
 L<Devel::ebug> does not handle signals under Windows.
 
+Running C<perl -d:ebug script.pl> directly does not work, and will fail
+with C<No DB::DB routine defined>. L<Devel::ebug> is the frontend class;
+it is not itself a C<-d> debugger backend. The backend is the internal
+L<Devel::ebug::Backend> module, which is invoked automatically as
+C<perl -d:ebug::Backend script.pl> when you call C<< $ebug->load >>. To
+debug a script, either use the L<ebug> command, or use L<Devel::ebug>
+programmatically:
+
+  my $ebug = Devel::ebug->new;
+  $ebug->program('script.pl');
+  $ebug->load;
+
 =cut

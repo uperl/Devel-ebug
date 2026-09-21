@@ -4,6 +4,8 @@ Revision history for {{$dist->name}}
   - Fix ^C (SIGINT) while running killing the console instead of
     dropping back into the debugger (gh#27, gh#55)
   - Document the ebug console's interactive commands (gh#32, gh#56)
+  - Document that `perl -d:ebug` is not a supported way to invoke the
+    debugger (gh#25, gh#56)
 
 0.64      2021-07-10 15:42:56 -0600
   - Remove dependency on FindBin and File::Which (gh#51)

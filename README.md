@@ -494,6 +494,20 @@ my $y = $ebug->yaml('$z');
 
 [Devel::ebug](https://metacpan.org/pod/Devel::ebug) does not handle signals under Windows.
 
+Running `perl -d:ebug script.pl` directly does not work, and will fail
+with `No DB::DB routine defined`. [Devel::ebug](https://metacpan.org/pod/Devel::ebug) is the frontend class;
+it is not itself a `-d` debugger backend. The backend is the internal
+[Devel::ebug::Backend](https://metacpan.org/pod/Devel::ebug::Backend) module, which is invoked automatically as
+`perl -d:ebug::Backend script.pl` when you call `$ebug->load`. To
+debug a script, either use the [ebug](https://metacpan.org/pod/ebug) command, or use [Devel::ebug](https://metacpan.org/pod/Devel::ebug)
+programmatically:
+
+```perl
+my $ebug = Devel::ebug->new;
+$ebug->program('script.pl');
+$ebug->load;
+```
+
 # AUTHOR
 
 Original author: Leon Brocard <acme@astray.com>
