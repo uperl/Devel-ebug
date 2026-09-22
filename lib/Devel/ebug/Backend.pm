@@ -156,38 +156,57 @@ sub get {
 }
 
 sub sub {
-  my (@args) = @_;
   my $sub = $DB::sub;
-
   my $frame = { single => $DB::single, sub => $sub };
   push @{ $context->{stack} }, $frame;
 
-  # If we are in 'next' mode, then skip all the lines in the sub
-  $DB::single = 0 if defined $context->{mode} && $context->{mode} eq 'next';
-
+  my $wantarray = wantarray; ## no critic (Community::Wantarray)
+  my(@ret, $ret);
   no strict 'refs';
-  if (wantarray) { ## no critic (Community::Wantarray)
-    my @ret   = &$sub;
-    my $frame = pop @{ $context->{stack} };
-    $DB::single = $frame->{single};
-    $DB::single = 0 if defined $context->{mode} && $context->{mode} eq 'run' && !@{$context->{watch_points}};
-
-    if ($frame->{'return'}) {
-      return @{ $frame->{'return'} };
-    } else {
-      return @ret;
-    }
+  if (defined $context->{mode} && $context->{mode} eq 'next') {
+    # If we are in 'next' mode, skip all the lines in the sub - but
+    # guarantee $DB::single is put back no matter how &$sub exits,
+    # including via an exception that gets caught further up the
+    # debuggee's own call stack (eg. Tk widgets routinely wrap
+    # internal calls in eval {} blocks for feature detection). Without
+    # this, such an exception would skip the explicit restore below,
+    # leaving $DB::single stuck at 0 and next/step permanently unable
+    # to regain control of the debuggee (it just runs to completion,
+    # or hangs forever if that includes something like Tk's MainLoop).
+    #
+    # This can't be done by wrapping &$sub in eval {} (that confuses
+    # perl's own sub-call tracing and breaks single-stepping outright)
+    # or with a DESTROY-based guard object (constructing the guard is
+    # itself a traced sub call, which recurses infinitely). `local` is
+    # a builtin, so neither pitfall applies - and it cleanly falls
+    # back to $frame->{single} in the exception case above, rather
+    # than leaving next/step stuck.
+    local $DB::single = 0;
+    if ($wantarray) { @ret = &$sub; } else { $ret = &$sub; }
   } else {
-    my $ret   = &$sub;
-    my $frame = pop @{ $context->{stack} };
-    $DB::single = $frame->{single};
-    $DB::single = 0 if defined $context->{mode} && $context->{mode} eq 'run' && !@{$context->{watch_points}};
+    if ($wantarray) { @ret = &$sub; } else { $ret = &$sub; }
+  }
 
-    if ($frame->{'return'}) {
-      return $frame->{'return'}->[0];
-    } else {
-      return $ret;
-    }
+  # Only reached if &$sub returned normally. In the 'next' branch
+  # above, $DB::single has already been restored to $frame->{single}
+  # by `local`, but other modes (eg. 'return') still rely on this
+  # explicit restore.
+  #
+  # We restore from $frame (our own lexical) rather than whatever pop
+  # returns, and check $frame->{'return'} the same way. $frame is the
+  # exact object that was pushed, so this is correct even if
+  # $context->{stack} has become misaligned by an earlier exception
+  # elsewhere skipping its own cleanup (see above) - a stray pop here
+  # would otherwise read a stale, unrelated frame and corrupt
+  # $DB::single for callers further up the stack too.
+  pop @{ $context->{stack} };
+  $DB::single = $frame->{single};
+  $DB::single = 0 if defined $context->{mode} && $context->{mode} eq 'run' && !@{$context->{watch_points}};
+
+  if ($wantarray) {
+    return $frame->{'return'} ? @{ $frame->{'return'} } : @ret;
+  } else {
+    return $frame->{'return'} ? $frame->{'return'}->[0] : $ret;
   }
 }
 
