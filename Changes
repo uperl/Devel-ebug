@@ -6,6 +6,11 @@ Revision history for {{$dist->name}}
   - Document the ebug console's interactive commands (gh#32, gh#56)
   - Document that `perl -d:ebug` is not a supported way to invoke the
     debugger (gh#25, gh#56)
+  - Fix 'next' permanently losing the ability to stop the debuggee
+    after stepping over a sub whose call chain dies internally and
+    catches its own exception (as eg. Tk widgets do for feature
+    detection); this could show up as a Tk window appearing too
+    early, or the debugger hanging altogether (gh#26)
 
 0.64      2021-07-10 15:42:56 -0600
   - Remove dependency on FindBin and File::Which (gh#51)
