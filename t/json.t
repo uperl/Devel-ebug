@@ -7,11 +7,14 @@ use Devel::ebug;
 use Devel::ebug::Wire;
 
 BEGIN {
-  eval { require JSON::PP; 1 }
-    or plan skip_all => 'JSON::PP is needed for the json serializer';
+  plan skip_all => 'JSON::PP or Cpanel::JSON::XS is needed for the json serializer'
+    unless eval { require JSON::PP; 1 } || eval { require Cpanel::JSON::XS; 1 };
 }
 
-plan tests => 22;
+my @classes = grep { (my $pm = "$_.pm") =~ s{::}{/}g; eval { require $pm; 1 } }
+              @Devel::ebug::Wire::JSON_CLASSES;
+
+plan tests => 12 + @classes;
 
 # --- format detection -------------------------------------------------
 
@@ -28,46 +31,61 @@ for my $format (qw( yaml json )) {
   is_deeply($back, $data, "$format round trips a plain structure");
 }
 
-my $line = Devel::ebug::Wire::encode('json', { command => 'step', note => "a\nb" });
-unlike($line, qr/\n/, 'an encoded json line never contains a newline');
-is_deeply(JSON::PP->new->utf8->decode($line),
-          { command => 'step', note => "a\nb" },
-          'the line is plain json, readable without Devel::ebug');
+# --- each json module ---------------------------------------------
 
-# Blessed references have to survive, because stack_trace sends
-# Devel::StackTrace::Frame objects that the frontend calls methods on.
-{
-  my $obj  = bless { subroutine => 'main::foo', args => [ 1, 2 ] }, 'Some::Frame';
-  my $back = Devel::ebug::Wire::decode('json',
-               Devel::ebug::Wire::encode('json', { frames => [$obj] }));
-  is(ref $back->{frames}[0], 'Some::Frame', 'json keeps the class of a blessed reference');
-  is($back->{frames}[0]{subroutine}, 'main::foo', 'and its contents');
-  is_deeply($back->{frames}[0]{args}, [ 1, 2 ], 'and nested contents');
-}
+foreach my $class (@classes) {
+  subtest $class => sub {
+    local $Devel::ebug::Wire::JSON;
+    local @Devel::ebug::Wire::JSON_CLASSES = ($class);
+    is(ref Devel::ebug::Wire::_json(), $class, "encoding with $class");
 
-{
-  my $scalar = 'hello';
-  my $back   = Devel::ebug::Wire::decode('json',
-                 Devel::ebug::Wire::encode('json', { ref => \$scalar }));
-  is(ref $back->{ref}, 'SCALAR', 'json keeps a scalar reference');
-  is(${ $back->{ref} }, 'hello', 'with the right value');
-}
+    my $line = Devel::ebug::Wire::encode('json', { command => 'step', note => "a\nb" });
+    unlike($line, qr/\n/, 'an encoded json line never contains a newline');
+    is_deeply($class->new->utf8->decode($line),
+              { command => 'step', note => "a\nb" },
+              'the line is plain json, readable without Devel::ebug');
 
-# Values sampled out of the debugged program can be anything at all; a
-# readable placeholder beats refusing to serialize the response.
-{
-  my $back = Devel::ebug::Wire::decode('json',
-               Devel::ebug::Wire::encode('json', { code => sub { 1 } }));
-  like($back->{code}, qr/^CODE/, 'a code reference becomes its name');
-}
+    # Blessed references have to survive, because stack_trace sends
+    # Devel::StackTrace::Frame objects that the frontend calls methods on.
+    {
+      my $obj  = bless { subroutine => 'main::foo', args => [ 1, 2 ] }, 'Some::Frame';
+      my $back = Devel::ebug::Wire::decode('json',
+                   Devel::ebug::Wire::encode('json', { frames => [$obj] }));
+      is(ref $back->{frames}[0], 'Some::Frame', 'json keeps the class of a blessed reference');
+      is($back->{frames}[0]{subroutine}, 'main::foo', 'and its contents');
+      is_deeply($back->{frames}[0]{args}, [ 1, 2 ], 'and nested contents');
+    }
 
-{
-  my $cycle = { name => 'loop' };
-  $cycle->{self} = $cycle;
-  my $back = Devel::ebug::Wire::decode('json',
-               Devel::ebug::Wire::encode('json', $cycle));
-  is($back->{name}, 'loop', 'a cycle still encodes the rest of the structure');
-  ok(!ref $back->{self}, 'and the loop is broken rather than followed');
+    {
+      my $scalar = 'hello';
+      my $back   = Devel::ebug::Wire::decode('json',
+                     Devel::ebug::Wire::encode('json', { ref => \$scalar }));
+      is(ref $back->{ref}, 'SCALAR', 'json keeps a scalar reference');
+      is(${ $back->{ref} }, 'hello', 'with the right value');
+    }
+
+    # Values sampled out of the debugged program can be anything at all; a
+    # readable placeholder beats refusing to serialize the response.
+    {
+      my $back = Devel::ebug::Wire::decode('json',
+                   Devel::ebug::Wire::encode('json', { code => sub { 1 } }));
+      like($back->{code}, qr/^CODE/, 'a code reference becomes its name');
+    }
+
+    {
+      my $cycle = { name => 'loop' };
+      $cycle->{self} = $cycle;
+      my $back = Devel::ebug::Wire::decode('json',
+                   Devel::ebug::Wire::encode('json', $cycle));
+      is($back->{name}, 'loop', 'a cycle still encodes the rest of the structure');
+      ok(!ref $back->{self}, 'and the loop is broken rather than followed');
+    }
+
+    is(Devel::ebug::Wire::decode('json', '{"t":true,"f":false}')->{t}, 1,
+       'true decodes to a plain 1');
+    is(Devel::ebug::Wire::decode('json', '{"t":true,"f":false}')->{f}, 0,
+       'false decodes to a plain 0');
+  };
 }
 
 # --- a real session over json ----------------------------------------

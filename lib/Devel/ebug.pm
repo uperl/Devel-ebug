@@ -250,9 +250,10 @@ which is how to choose the format for a frontend you do not construct
 yourself, such as L<ebug_client>.
 
 The backend replies in whichever format each request arrived in, so nothing
-has to be arranged with it beforehand.  Selecting C<json> requires
-L<JSON::PP>, which has shipped with perl since 5.14 but is not otherwise a
-prerequisite of this distribution.
+has to be arranged with it beforehand.  Selecting C<json> uses
+L<Cpanel::JSON::XS> if it is installed, and otherwise requires L<JSON::PP>,
+which has shipped with perl since 5.14 but is not otherwise a prerequisite
+of this distribution.
 
 See L<Devel::ebug::Wire> for the details of both formats.
 
