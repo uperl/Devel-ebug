@@ -5,10 +5,10 @@ use warnings;
 use Carp;
 use Class::Accessor::Chained::Fast;
 use Devel::StackTrace 2.00;
+use Devel::ebug::Wire;
 use IO::Socket::INET;
 use Proc::Background;
 use String::Koremutake;
-use YAML;
 use Module::Pluggable require => 1;
 
 use base qw(Class::Accessor::Chained::Fast);
@@ -19,11 +19,21 @@ use base qw(Class::Accessor::Chained::Fast);
 __PACKAGE__->mk_accessors(qw(
     backend
     port
+    serializer
     program socket proc
     package filename line codeline subroutine finished));
 
 # let's run the code under our debugger and connect to the server it
 # starts up
+# 'yaml' unless asked otherwise, so existing clients are unaffected.
+sub _serializer {
+  my($self) = @_;
+  my $format = $self->serializer || $ENV{DEVEL_EBUG_SERIALIZER} || 'yaml';
+  croak "unknown serializer '$format', expected 'yaml' or 'json'"
+    unless $format eq 'yaml' or $format eq 'json';
+  return $format;
+}
+
 sub load {
   my $self = shift;
   my $program = $self->program;
@@ -101,24 +111,20 @@ sub attach {
 
 
 
-# at the moment, we talk hex-encoded YAML serialisation
-# don't worry about this too much
+# Requests and responses go over the socket one line at a time; see
+# Devel::ebug::Wire for how a line is put together.
 sub talk {
   my($self, $req) = @_;
   my $socket = $self->socket;
 
-  my $data = unpack("h*", Dump($req));
-  $socket->print($data . "\n");
-  $data = <$socket>;
-  if ($data) {
-    my $res = do {
-      $YAML::LoadBlessed = 1;
-      Load(pack("h*", $data));
-    };
-    return $res;
-  } else {
-    return undef;
-  }
+  my $format = $self->_serializer;
+  $socket->print(Devel::ebug::Wire::encode($format, $req) . "\n");
+  my $data = <$socket>;
+  return undef unless $data;
+
+  # The backend answers in the format it was asked in, but detect rather
+  # than assume: it costs nothing and keeps a mismatch from being silent.
+  return Devel::ebug::Wire::decode(Devel::ebug::Wire::detect($data), $data);
 }
 
 1;
@@ -225,6 +231,30 @@ The constructor creats a L<Devel::ebug> object:
 The program method selects which program to load:
 
   $ebug->program("calc.pl");
+
+=head2 serializer
+
+The serializer method selects how requests and responses are written on the
+socket between the frontend and the backend:
+
+  $ebug->serializer("json");
+
+C<yaml> is the default and is what every existing client speaks: L<YAML>
+output, hex packed onto a single line.  C<json> writes one plain JSON object
+per line instead, which is the format to choose when the other end is not
+Perl - a JSON line can be read by anything, whereas hex packed YAML asks a
+client for a YAML parser, object deserialization and a hex decoder first.
+
+It can also be set with the C<DEVEL_EBUG_SERIALIZER> environment variable,
+which is how to choose the format for a frontend you do not construct
+yourself, such as L<ebug_client>.
+
+The backend replies in whichever format each request arrived in, so nothing
+has to be arranged with it beforehand.  Selecting C<json> requires
+L<JSON::PP>, which has shipped with perl since 5.14 but is not otherwise a
+prerequisite of this distribution.
+
+See L<Devel::ebug::Wire> for the details of both formats.
 
 =head2 load
 
