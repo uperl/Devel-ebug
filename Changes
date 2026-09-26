@@ -4,9 +4,9 @@ Revision history for {{$dist->name}}
   - Add an optional JSON wire format, selected with the `serializer`
     attribute or the DEVEL_EBUG_SERIALIZER environment variable, so that
     frontends which are not written in Perl can speak the protocol
-    without implementing YAML (gh#NN)
+    without implementing YAML (gh#59)
   - Exit quietly when the frontend disconnects instead of warning about
-    an undefined value in pack (gh#30, gh#NN)
+    an undefined value in pack (gh#30, gh#59)
 
 0.65      2026-09-21 19:55:44 -0600
   - Fix ^C (SIGINT) while running killing the console instead of
