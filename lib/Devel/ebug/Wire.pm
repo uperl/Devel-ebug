@@ -41,8 +41,9 @@ a hex decoder before it can say hello; a JSON line can be read by anything.
 
 =back
 
-L<JSON::PP> is only loaded when JSON is actually used, so it is not needed
-to run the debugger, and neither is L<YAML> when JSON is in use.
+The JSON encoder is only loaded when JSON is actually used, so it is not
+needed to run the debugger, and neither is L<YAML> when JSON is in use.
+L<Cpanel::JSON::XS> is used if it is installed, otherwise L<JSON::PP>.
 
 =head2 Blessed references
 
@@ -66,6 +67,10 @@ and is what the reader wanted anyway.
 
 our $JSON;
 
+# Tried in order; the first that loads wins.  The XS module is much faster,
+# and the protocol is chatty enough that it shows.
+our @JSON_CLASSES = qw( Cpanel::JSON::XS JSON::PP );
+
 # The two formats cannot be confused: a hex packed YAML line is made up
 # entirely of [0-9a-f], and a JSON object always opens with a brace.  That
 # lets the backend answer each request in the format it arrived in, which
@@ -80,11 +85,19 @@ sub detect {
 
 sub _json {
   return $JSON if $JSON;
-  eval { require JSON::PP; 1 }
-    or croak "the json serializer needs JSON::PP, which could not be loaded: $@";
+  my $class;
+  foreach my $try (@JSON_CLASSES) {
+    (my $pm = "$try.pm") =~ s{::}{/}g;
+    if (eval { require $pm; 1 }) {
+      $class = $try;
+      last;
+    }
+  }
+  croak "the json serializer needs one of @{[ join ' or ', @JSON_CLASSES ]}, none of which could be loaded"
+    unless $class;
   # canonical keeps the output stable, which makes the protocol diffable
   # and the tests repeatable; allow_nonref so a bare scalar is legal.
-  $JSON = JSON::PP->new->utf8->canonical->allow_nonref;
+  $JSON = $class->new->utf8->canonical->allow_nonref;
   return $JSON;
 }
 
@@ -127,7 +140,9 @@ sub _inflate {
   my $ref = ref $data;
   return $data unless $ref;
 
-  if ($ref eq 'JSON::PP::Boolean') {
+  # Current JSON::PP and Cpanel::JSON::XS both decode true and false into
+  # JSON::PP::Boolean; accept Cpanel's own boolean class too, to be safe.
+  if (blessed $data && ($data->isa('JSON::PP::Boolean') || $data->isa('Cpanel::JSON::XS::Boolean'))) {
     return $data ? 1 : 0;
   }
 
