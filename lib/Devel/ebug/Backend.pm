@@ -7,9 +7,9 @@ use warnings;
 
 package DB;
 
+use Devel::ebug::Wire;
 use IO::Socket::INET;
 use String::Koremutake;
-use YAML;
 use Module::Pluggable
   search_path => 'Devel::ebug::Backend::Plugin',
   require     => 1;
@@ -137,7 +137,9 @@ sub initialise {
 
 sub put {
   my ($res) = @_;
-  my $data = unpack("h*", Dump($res));
+  # Answer in whatever format the request arrived in, so the frontend
+  # decides and the backend needs no configuring.
+  my $data = Devel::ebug::Wire::encode($context->{format} || 'yaml', $res);
   local $\; # if we run under perl -l the following line would get mangled
   $context->{socket}->print($data . "\n");
 }
@@ -146,10 +148,10 @@ sub get {
   exit unless $context->{socket};
   local $/= "\n";
   my $data = $context->{socket}->getline;
-  my $req = do {
-    local $YAML::LoadBlessed = 1;
-    Load(pack("h*", $data));
-  };
+  # The frontend has gone away; that is how a session ends, not an error.
+  exit unless defined $data;
+  $context->{format} = Devel::ebug::Wire::detect($data);
+  my $req = Devel::ebug::Wire::decode($context->{format}, $data);
   push @{ $context->{history} }, $req
     if exists $commands{ $req->{command} }->{record};
   return $req;
