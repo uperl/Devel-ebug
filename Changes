@@ -7,7 +7,7 @@ Revision history for {{$dist->name}}
     without implementing YAML.  Cpanel::JSON::XS is used when it is
     installed, falling back to JSON::PP (gh#59)
   - Exit quietly when the frontend disconnects instead of warning about
-    an undefined value in pack (gh#30, gh#59)
+    an undefined value in pack (gh#59)
   - Pass the debugged program's command-line arguments through
     exactly as given, so they may contain spaces or shell
     metacharacters: add an `args` attribute to Devel::ebug, and have
@@ -30,6 +30,10 @@ Revision history for {{$dist->name}}
     while the program runs.  pid() returns the program's own process id,
     which differs from the process load() started when the program is
     run through the shell (gh#61)
+  - Report a clear error, which can be caught, when the program being
+    debugged goes away without the debugger's help (killed, crashed, or
+    POSIX::_exit), instead of the frontend dying silently from SIGPIPE
+    (gh#30)
 
 0.65      2026-09-21 19:55:44 -0600
   - Fix ^C (SIGINT) while running killing the console instead of
