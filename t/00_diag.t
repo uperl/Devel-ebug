@@ -16,6 +16,7 @@ $modules{$_} = $_ for qw(
   Expect
   Expect::Simple
   ExtUtils::MakeMaker
+  File::Temp
   IO::Select
   IO::Socket::INET
   JSON::PP
