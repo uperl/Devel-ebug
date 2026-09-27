@@ -22,7 +22,7 @@ __PACKAGE__->mk_accessors(qw(
     backend
     port
     serializer
-    program args socket proc
+    program args socket proc pid running
     package filename line codeline subroutine finished));
 
 # let's run the code under our debugger and connect to the server it
@@ -149,6 +149,8 @@ sub _handshake {
     my $version = $response->{version};
     die "Client version $version != our version $Devel::ebug::VERSION"
         unless do { no warnings 'uninitialized'; $version eq $Devel::ebug::VERSION };
+    $self->pid($response->{pid});
+    $self->running(0);
 
     $self->basic;    # get basic information for the first line
 }
@@ -174,10 +176,21 @@ sub _handshake {
 # Devel::ebug::Wire for how a line is put together.
 sub talk {
   my($self, $req) = @_;
-  my $socket = $self->socket;
+  croak "Devel::ebug: the program is running; call wait_for_stop() before '$req->{command}'"
+    if $self->running;
+  $self->_send($req);
+  return $self->_receive;
+}
 
+sub _send {
+  my($self, $req) = @_;
   my $format = $self->_serializer;
-  $socket->print(Devel::ebug::Wire::encode($format, $req) . "\n");
+  $self->socket->print(Devel::ebug::Wire::encode($format, $req) . "\n");
+}
+
+sub _receive {
+  my($self) = @_;
+  my $socket = $self->socket;
   my $data = <$socket>;
   return undef unless $data;
 
@@ -506,6 +519,27 @@ The finished method returns whether the program has finished running:
 
   print "Finished!\n" if $ebug->finished;
 
+=head2 interrupt
+
+The interrupt method asks a running program to stop at the next statement,
+as if a break point were there. It is meant for a program started with
+L</run_nowait>, or for calling from a signal handler during L</run>:
+
+  $ebug->run_nowait;
+  ...
+  $ebug->interrupt;
+  $ebug->wait_for_stop;
+
+It returns true if the program was signalled, and false without doing
+anything if the program is not running. Call L</wait_for_stop> afterwards
+to find out where it stopped.
+
+Interrupting works by sending C<SIGINT> to the program, so it is only
+supported for a program started with L</load> on the same host, and not on
+Windows; it croaks otherwise. Like pressing Ctrl-C, it takes effect once
+the program next executes a Perl statement, so a long call into XS code
+finishes first.
+
 =head2 line
 
 The line method returns the line number of the statement about to be
@@ -541,6 +575,12 @@ The package method returns the package of the currently running code:
     print "Variable: $k = $v\n";
   }
 
+=head2 pid
+
+The pid method returns the process id of the program being debugged, as
+reported by the program itself. This can differ from the process started
+by L</load> when the program is run through the shell.
+
 =head2 return
 
 The return subroutine returns from a subroutine. It continues running
@@ -557,9 +597,37 @@ purposes:
 =head2 run
 
 The run subroutine starts executing the code. It will only stop on a
-break point or watch point.
+break point, a watch point, an L</interrupt> or the end of the program.
+To start running without waiting for it to stop, see L</run_nowait>.
 
   $ebug->run;
+
+=head2 run_nowait
+
+The run_nowait method starts executing the code like L</run>, but returns
+straight away instead of waiting for the program to stop:
+
+  $ebug->run_nowait;
+
+While the program is running, the only methods that may be called are
+L</interrupt>, L</running> and L</wait_for_stop>; anything else croaks.
+The L</socket> becomes readable when the program stops, so a frontend with
+an event loop can wait on it rather than calling L</wait_for_stop> right
+away.
+
+=head2 running
+
+The running method returns true between L</run_nowait> and
+L</wait_for_stop>:
+
+  print "still going\n" if $ebug->running;
+
+=head2 socket
+
+The socket method returns the socket connected to the program being
+debugged. Do not read from or write to it; it is only useful for waiting,
+for example with L<IO::Select>, for it to become readable after
+L</run_nowait>.
 
 =head2 step
 
@@ -609,6 +677,17 @@ break_point_subroutine, eval, next, step, return, run and watch_point.
 It can also undo multiple commands:
 
   $ebug->undo(3);
+
+=head2 wait_for_stop
+
+The wait_for_stop method waits for a program started with L</run_nowait>
+to stop, at a break point, a watch point, an L</interrupt> or the end of
+the program, and updates L</filename>, L</line> and so on to match:
+
+  $ebug->wait_for_stop;
+  print $ebug->filename, ":", $ebug->line, "\n";
+
+It returns straight away if the program is not running.
 
 =head2 watch_point
 

@@ -37,6 +37,9 @@ sub return {
 
 sub run {
   my($req, $context) = @_;
+  # a SIGINT that arrived while we were stopped is stale; don't let it
+  # stop us again at the very next statement
+  $DB::signal = 0;
   $context->{mode} = "run"; # run until break point
   if (@{$context->{watch_points}}) {
     # watch points, let's go slow

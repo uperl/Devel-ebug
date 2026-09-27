@@ -10,7 +10,12 @@ our @EXPORT = qw(basic);
 # get basic debugging information
 sub basic {
   my ($self) = @_;
-  my $response = $self->talk({ command => "basic" });
+  _basic_response($self, $self->talk({ command => "basic" }));
+}
+
+# record where the debuggee is, from the answer to a basic request
+sub _basic_response {
+  my ($self, $response) = @_;
   $self->codeline($response->{codeline});
   $self->filename($response->{filename});
   $self->finished($response->{finished});
