@@ -70,9 +70,9 @@ SKIP: {
   );
   expect_like(qr/Welcome to Devel::ebug/, 'the console starts');
   expect_send('e scalar @ARGV', 'ask for the argument count');
-  expect_like(qr/^2$/m, 'the console passes each argument separately');
+  expect_like(qr/\A2(?:\n|\z)/, 'the console passes each argument separately');
   expect_send('e $ARGV[0]', 'ask for the first argument');
-  expect_like(qr/^two words$/m, 'keeping spaces');
+  expect_like(qr/\Atwo words(?:\n|\z)/, 'keeping spaces');
   expect_send('e $ARGV[1]', 'ask for the second argument');
-  expect_like(qr/^a\$b$/m, 'and shell metacharacters');
+  expect_like(qr/\Aa\$b(?:\n|\z)/, 'and shell metacharacters');
 }
