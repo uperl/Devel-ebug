@@ -9,6 +9,7 @@ use Devel::ebug::Wire;
 use IO::Socket::INET;
 use Proc::Background;
 use String::Koremutake;
+use Text::ParseWords qw(shellwords);
 use Module::Pluggable require => 1;
 
 use base qw(Class::Accessor::Chained::Fast);
@@ -20,7 +21,7 @@ __PACKAGE__->mk_accessors(qw(
     backend
     port
     serializer
-    program socket proc
+    program args socket proc
     package filename line codeline subroutine finished));
 
 # let's run the code under our debugger and connect to the server it
@@ -47,11 +48,19 @@ sub load {
   my $port   = 3141 + ($rand % 1024);
 
   $ENV{SECRET} = $secret;
-  my $backend = $self->backend || "$^X -d:ebug::Backend";
-  my $command = "$backend $program";
+  # With args the command is run as a list, so they reach the program
+  # verbatim instead of being split and interpolated by the shell.
+  my @command;
+  if (my $args = $self->args) {
+    my @backend = $self->backend ? shellwords($self->backend) : ($^X, '-d:ebug::Backend');
+    @command = (@backend, $program, @$args);
+  } else {
+    my $backend = $self->backend || "$^X -d:ebug::Backend";
+    @command = ("$backend $program");
+  }
   my $proc = Proc::Background->new(
     {'die_upon_destroy' => 1},
-    $command
+    @command
   );
   croak(qq{Devel::ebug: Failed to start up "$program" in load()}) unless $proc->alive;
   $self->proc($proc);
@@ -231,6 +240,25 @@ The constructor creats a L<Devel::ebug> object:
 The program method selects which program to load:
 
   $ebug->program("calc.pl");
+
+The program is run through the shell, so it may also carry arguments for
+the program (C<"add.pl 3 4">), subject to the shell's word splitting and
+interpolation.  To pass arguments that must arrive exactly as given, set
+L</args> instead.
+
+=head2 args
+
+The args method sets the command-line arguments for the program, as an
+array reference:
+
+  $ebug->program("add.pl");
+  $ebug->args([ 3, "four and a half" ]);
+
+When args is set the program is started without going through the shell,
+so each argument reaches the program's C<@ARGV> unchanged, even if it
+contains spaces, quotes or other shell metacharacters.  In that case
+L</program> is taken as the path of the program alone.  The arguments are
+used again each time the program is restarted, for example by C<undo>.
 
 =head2 serializer
 

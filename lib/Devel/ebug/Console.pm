@@ -19,13 +19,19 @@ sub run {
     die "INT";
   };
 
-  my $filename = join " ", @ARGV;
+  my $ebug = Devel::ebug->new;
 
-  unless ($filename) {
+  # "ebug add.pl 3 4" passes each argument through untouched, while a
+  # single "ebug 'add.pl 3 4'" is still handed to the shell as before
+  my ($filename, @args) = @ARGV;
+  if (@args) {
+    $ebug->args(\@args);
+  }
+
+  unless (defined $filename && length $filename) {
     $filename = '-e "Interactive ebugging shell"';
   }
 
-  my $ebug = Devel::ebug->new;
   $ebug->program($filename);
   $ebug->backend($backend);
   $ebug->load;
