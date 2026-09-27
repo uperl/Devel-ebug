@@ -4,7 +4,7 @@ Revision history for {{$dist->name}}
   - break_point_subroutine() takes an optional condition, like
     break_point(), and the ebug console accepts one after a subroutine
     name (b Calc::fib $_[1] > 5).  The condition is checked as the
-    subroutine is entered, so @_ holds its arguments (gh#35)
+    subroutine is entered, so @_ holds its arguments (gh#35, gh#69)
 
 0.66      2026-09-26 21:30:13 -0600
   - Add an optional JSON wire format, selected with the `serializer`
@@ -35,7 +35,7 @@ Revision history for {{$dist->name}}
     wait_for_stop() and running() so that a frontend can keep control
     while the program runs.  pid() returns the program's own process id,
     which differs from the process load() started when the program is
-    run through the shell (gh#61)
+    run through the shell (gh#61, gh#66)
   - Report a clear error, which can be caught, when the program being
     debugged goes away without the debugger's help (killed, crashed, or
     POSIX::_exit), instead of the frontend dying silently from SIGPIPE
