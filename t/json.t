@@ -35,6 +35,7 @@ for my $format (qw( yaml json )) {
 
 foreach my $class (@classes) {
   subtest $class => sub {
+    plan tests => 13;
     local $Devel::ebug::Wire::JSON;
     local @Devel::ebug::Wire::JSON_CLASSES = ($class);
     is(ref Devel::ebug::Wire::_json(), $class, "encoding with $class");
