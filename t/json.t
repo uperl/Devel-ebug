@@ -6,13 +6,13 @@ use Test::More;
 use Devel::ebug;
 use Devel::ebug::Wire;
 
-BEGIN {
-  plan skip_all => 'JSON::PP or Cpanel::JSON::XS is needed for the json serializer'
-    unless eval { require JSON::PP; 1 } || eval { require Cpanel::JSON::XS; 1 };
-}
-
+# Both JSON modules are optional, so load them by filename: a bareword
+# require would make them test prereqs.
 my @classes = grep { (my $pm = "$_.pm") =~ s{::}{/}g; eval { require $pm; 1 } }
               @Devel::ebug::Wire::JSON_CLASSES;
+
+plan skip_all => 'JSON::PP or Cpanel::JSON::XS is needed for the json serializer'
+  unless @classes;
 
 plan tests => 12 + @classes;
 
