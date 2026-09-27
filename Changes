@@ -11,7 +11,8 @@ Revision history for {{$dist->name}}
   - Pass the debugged program's command-line arguments through
     exactly as given, so they may contain spaces or shell
     metacharacters: add an `args` attribute to Devel::ebug, and have
-    ebug and ebug_server use it when given more than one argument (gh#31)
+    ebug and ebug_server use it when given more than one argument
+    (gh#31, gh#60)
 
 0.65      2026-09-21 19:55:44 -0600
   - Fix ^C (SIGINT) while running killing the console instead of
