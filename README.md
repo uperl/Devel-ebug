@@ -86,12 +86,22 @@ kill 2, $$ if $square > 100;
 Internally, [Devel::ebug](https://metacpan.org/pod/Devel::ebug) consists of two parts. The frontend is
 [Devel::ebug](https://metacpan.org/pod/Devel::ebug), which you interact with. The frontend starts the code
 you are debugging in the background under the backend (running it
-under perl -d:ebug code.pl). The backend starts a TCP server, which
-the frontend then connects to, and uses this to drive the
-backend. This adds some flexibility in the debugger. There is some
-minor security in the client/server startup (a secret word), and a
-random port is used from 3141-4165 so that multiple debugging sessions
-can happen concurrently.
+under perl -d:ebug code.pl), and the two talk over a TCP socket on
+localhost, which the frontend uses to drive the backend. This adds some
+flexibility in the debugger.
+
+When ["load"](#load) starts the program, the frontend listens on a port chosen
+by the operating system and passes it to the backend in the
+`DEVEL_EBUG_CONNECT` environment variable, along with a random secret
+word in `SECRET`. The backend connects back to that port and sends the
+secret before anything else, so the frontend can tell it apart from
+anything else that connects. Because the port is chosen by the operating
+system, any number of debugging sessions can run concurrently.
+
+Without `DEVEL_EBUG_CONNECT`, the backend instead listens on a port from
+3141-4165 derived from the secret, and waits for a frontend to attach
+with that secret, as [ebug\_server](https://metacpan.org/pod/ebug_server) and [ebug\_client](https://metacpan.org/pod/ebug_client) do. A frontend
+with the wrong secret is turned away without ending the session.
 
 # CONSTRUCTOR
 
@@ -110,6 +120,54 @@ The program method selects which program to load:
 ```
 $ebug->program("calc.pl");
 ```
+
+The program is run through the shell, so it may also carry arguments for
+the program (`"add.pl 3 4"`), subject to the shell's word splitting and
+interpolation.  To pass arguments that must arrive exactly as given, set
+["args"](#args) instead.
+
+## args
+
+The args method sets the command-line arguments for the program, as an
+array reference:
+
+```
+$ebug->program("add.pl");
+$ebug->args([ 3, "four and a half" ]);
+```
+
+When args is set the program is started without going through the shell,
+so each argument reaches the program's `@ARGV` unchanged, even if it
+contains spaces, quotes or other shell metacharacters.  In that case
+["program"](#program) is taken as the path of the program alone.  The arguments are
+used again each time the program is restarted, for example by `undo`.
+
+## serializer
+
+The serializer method selects how requests and responses are written on the
+socket between the frontend and the backend:
+
+```
+$ebug->serializer("json");
+```
+
+`yaml` is the default and is what every existing client speaks: [YAML](https://metacpan.org/pod/YAML)
+output, hex packed onto a single line.  `json` writes one plain JSON object
+per line instead, which is the format to choose when the other end is not
+Perl - a JSON line can be read by anything, whereas hex packed YAML asks a
+client for a YAML parser, object deserialization and a hex decoder first.
+
+It can also be set with the `DEVEL_EBUG_SERIALIZER` environment variable,
+which is how to choose the format for a frontend you do not construct
+yourself, such as [ebug\_client](https://metacpan.org/pod/ebug_client).
+
+The backend replies in whichever format each request arrived in, so nothing
+has to be arranged with it beforehand.  Selecting `json` uses
+[Cpanel::JSON::XS](https://metacpan.org/pod/Cpanel::JSON::XS) if it is installed, and otherwise requires [JSON::PP](https://metacpan.org/pod/JSON::PP),
+which has shipped with perl since 5.14 but is not otherwise a prerequisite
+of this distribution.
+
+See [Devel::ebug::Wire](https://metacpan.org/pod/Devel::ebug::Wire) for the details of both formats.
 
 ## load
 
