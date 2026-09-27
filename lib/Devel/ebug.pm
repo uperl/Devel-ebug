@@ -135,12 +135,15 @@ sub attach {
 sub _handshake {
     my ($self, $key, $port) = @_;
 
-    my $response = $self->talk(
+    # talk() would report a closed connection as a lost program; here it
+    # means our secret was turned away, which deserves its own message
+    $self->_send(
         {   command => "ping",
             version => $Devel::ebug::VERSION,
             secret  => $key,
         }
     );
+    my $response = $self->_receive(1);
     unless ($response) {
         die "The debugger did not answer the handshake"
           . (defined $port ? " on port $port; the key may be wrong, or the port may belong to another session" : "")
@@ -174,6 +177,31 @@ sub _handshake {
 
 # Requests and responses go over the socket one line at a time; see
 # Devel::ebug::Wire for how a line is put together.
+# The debugger went away mid-conversation: the program exited without
+# the debugger's cleanup running, was killed, or crashed.
+sub _lost {
+  my($self) = @_;
+  $self->running(0);
+  my $program = defined $self->pid ? sprintf('the program (pid %d)', $self->pid) : 'the program';
+  my $what = "$program has exited or been killed";
+
+  # When we started it, say how it ended.  The connection can close a
+  # moment before the process is reaped, so give it a short while.
+  if (my $proc = $self->proc) {
+    for (1 .. 20) {
+      last unless $proc->alive;
+      select(undef, undef, undef, 0.05);
+    }
+    my $status = $proc->alive ? undef : $proc->wait;
+    if (defined $status) {
+      $what = $status & 127
+        ? sprintf('%s was killed by signal %d', $program, $status & 127)
+        : sprintf('%s exited with status %d', $program, $status >> 8);
+    }
+  }
+  croak "Devel::ebug: lost the connection to the debugger; $what";
+}
+
 sub talk {
   my($self, $req) = @_;
   croak "Devel::ebug: the program is running; call wait_for_stop() before '$req->{command}'"
@@ -185,14 +213,23 @@ sub talk {
 sub _send {
   my($self, $req) = @_;
   my $format = $self->_serializer;
-  $self->socket->print(Devel::ebug::Wire::encode($format, $req) . "\n");
+  # Writing to a debugger that has gone away raises SIGPIPE, which would
+  # kill the frontend outright; turn it into an error that can be caught.
+  local $SIG{PIPE} = 'IGNORE';
+  $self->socket->print(Devel::ebug::Wire::encode($format, $req) . "\n")
+    or $self->_lost;
 }
 
+# Read one response.  A closed connection is an error, unless $allow_eof
+# is true, in which case it returns undef.
 sub _receive {
-  my($self) = @_;
+  my($self, $allow_eof) = @_;
   my $socket = $self->socket;
   my $data = <$socket>;
-  return undef unless $data;
+  unless (defined $data) {
+    return undef if $allow_eof;
+    $self->_lost;
+  }
 
   # The backend answers in the format it was asked in, but detect rather
   # than assume: it costs nothing and keeps a mismatch from being silent.
@@ -365,6 +402,12 @@ The load method loads the program and gets ready to debug it:
   $ebug->load;
 
 =head1 METHODS
+
+If the program being debugged goes away without the debugger's help, for
+example because it was killed, crashed in XS code or called
+C<POSIX::_exit>, any method that talks to it croaks with an error that
+begins C<Devel::ebug: lost the connection to the debugger>. For a program
+started with L</load>, the error also says how it ended.
 
 =head2 break_point
 
