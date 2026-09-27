@@ -77,7 +77,7 @@ sub run {
       print 'Commands:
 
       b Set break point at a line number (eg: b 6, b code.pl 6, b code.pl 6 $x > 7,
-      b Calc::fib)
+      b Calc::fib, b Calc::fib $_[1] > 5)
      bf break on file loading (eg: bf Calc.pm)
       d Delete a break point (d 6, d code.pl 6)
       e Eval Perl code and print the result (eg: e $x+$y)
@@ -141,6 +141,11 @@ restart Restart the program
     } elsif (my($line, $condition) = $command =~ /^b (\d+) ?(.*)/) {
       undef $condition unless $condition;
       $ebug->break_point($line, $condition);
+    } elsif (my($sub, $sub_condition) = $command =~ /^b ((?:\w+::)+\w+)(?: (.+))?$/) {
+      # a fully qualified subroutine name, optionally with a condition;
+      # checked before "b FILE LINE", which would otherwise take a
+      # condition ending in a number as the line
+      $ebug->break_point_subroutine($sub, $sub_condition);
     } elsif ($command =~ /^b (.+?) (\d+) ?(.*)/) {
       $ebug->break_point($1, $2, $3);
     } elsif ($command =~ /^b (.+)/) {
