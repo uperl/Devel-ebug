@@ -376,6 +376,29 @@ The finished method returns whether the program has finished running:
 print "Finished!\n" if $ebug->finished;
 ```
 
+## interrupt
+
+The interrupt method asks a running program to stop at the next statement,
+as if a break point were there. It is meant for a program started with
+["run\_nowait"](#run_nowait), or for calling from a signal handler during ["run"](#run):
+
+```
+$ebug->run_nowait;
+...
+$ebug->interrupt;
+$ebug->wait_for_stop;
+```
+
+It returns true if the program was signalled, and false without doing
+anything if the program is not running. Call ["wait\_for\_stop"](#wait_for_stop) afterwards
+to find out where it stopped.
+
+Interrupting works by sending `SIGINT` to the program, so it is only
+supported for a program started with ["load"](#load) on the same host, and not on
+Windows; it croaks otherwise. Like pressing Ctrl-C, it takes effect once
+the program next executes a Perl statement, so a long call into XS code
+finishes first.
+
 ## line
 
 The line method returns the line number of the statement about to be
@@ -421,6 +444,12 @@ foreach my $k (sort keys %$pad) {
 }
 ```
 
+## pid
+
+The pid method returns the process id of the program being debugged, as
+reported by the program itself. This can differ from the process started
+by ["load"](#load) when the program is run through the shell.
+
 ## return
 
 The return subroutine returns from a subroutine. It continues running
@@ -441,11 +470,43 @@ $ebug->return(3.141);
 ## run
 
 The run subroutine starts executing the code. It will only stop on a
-break point or watch point.
+break point, a watch point, an ["interrupt"](#interrupt) or the end of the program.
+To start running without waiting for it to stop, see ["run\_nowait"](#run_nowait).
 
 ```
 $ebug->run;
 ```
+
+## run\_nowait
+
+The run\_nowait method starts executing the code like ["run"](#run), but returns
+straight away instead of waiting for the program to stop:
+
+```
+$ebug->run_nowait;
+```
+
+While the program is running, the only methods that may be called are
+["interrupt"](#interrupt), ["running"](#running) and ["wait\_for\_stop"](#wait_for_stop); anything else croaks.
+The ["socket"](#socket) becomes readable when the program stops, so a frontend with
+an event loop can wait on it rather than calling ["wait\_for\_stop"](#wait_for_stop) right
+away.
+
+## running
+
+The running method returns true between ["run\_nowait"](#run_nowait) and
+["wait\_for\_stop"](#wait_for_stop):
+
+```
+print "still going\n" if $ebug->running;
+```
+
+## socket
+
+The socket method returns the socket connected to the program being
+debugged. Do not read from or write to it; it is only useful for waiting,
+for example with [IO::Select](https://metacpan.org/pod/IO::Select), for it to become readable after
+["run\_nowait"](#run_nowait).
 
 ## step
 
@@ -507,6 +568,19 @@ It can also undo multiple commands:
 ```
 $ebug->undo(3);
 ```
+
+## wait\_for\_stop
+
+The wait\_for\_stop method waits for a program started with ["run\_nowait"](#run_nowait)
+to stop, at a break point, a watch point, an ["interrupt"](#interrupt) or the end of
+the program, and updates ["filename"](#filename), ["line"](#line) and so on to match:
+
+```
+$ebug->wait_for_stop;
+print $ebug->filename, ":", $ebug->line, "\n";
+```
+
+It returns straight away if the program is not running.
 
 ## watch\_point
 

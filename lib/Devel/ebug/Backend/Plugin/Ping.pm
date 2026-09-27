@@ -17,6 +17,7 @@ sub ping {
   $ENV{SECRET} = "";
   return {
     version => $DB::VERSION,
+    pid     => $$,  # the debuggee itself, which is what interrupt() signals
   }
 }
 

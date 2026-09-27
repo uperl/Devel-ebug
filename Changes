@@ -24,6 +24,12 @@ Revision history for {{$dist->name}}
     restarting and undo, no longer spends a second waiting to connect
     to the backend, taking about 0.05s instead of just over a second
     (gh#64)
+  - Add interrupt(), to stop a running program from a frontend which
+    does not share a terminal with it, along with run_nowait(),
+    wait_for_stop() and running() so that a frontend can keep control
+    while the program runs.  pid() returns the program's own process id,
+    which differs from the process load() started when the program is
+    run through the shell (gh#61)
 
 0.65      2026-09-21 19:55:44 -0600
   - Fix ^C (SIGINT) while running killing the console instead of

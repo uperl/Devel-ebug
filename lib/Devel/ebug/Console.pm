@@ -123,9 +123,9 @@ restart Restart the program
       if ($@) {
         die $@ unless $@ =~ /^INT/;
         # SIGINT while the program was running: the backend already
-        # dropped into the debugger, so just refresh our view of it
+        # dropped into the debugger, so pick up where it stopped
         # instead of dying back out to the shell.
-        $ebug->basic;
+        $ebug->wait_for_stop;
       }
     } elsif ($command eq 'restart') {
       $ebug->load;
