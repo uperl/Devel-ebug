@@ -65,8 +65,12 @@ Set a break point at C<LINE> in C<FILE> (eg: C<b code.pl 6>).
 
 =item b SUBROUTINE
 
+=item b SUBROUTINE CONDITION
+
 Set a break point at the start of C<SUBROUTINE>, given as a fully
-qualified name (eg: C<b Calc::fib>).
+qualified name, optionally only breaking when C<CONDITION> is true. The
+condition is checked as the subroutine is entered, so C<@_> holds its
+arguments (eg: C<b Calc::fib>, C<b Calc::fib $_[1] E<gt> 5>).
 
 =item bf FILE
 

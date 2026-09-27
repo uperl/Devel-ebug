@@ -48,10 +48,11 @@ sub break_point_delete {
 
 # set a break point
 sub break_point_subroutine {
-  my($self, $subroutine) = @_;
+  my($self, $subroutine, $condition) = @_;
   my $response = $self->talk({
     command    => "break_point_subroutine",
     subroutine => $subroutine,
+    condition  => $condition,
   });
   return $response->{line};
 }

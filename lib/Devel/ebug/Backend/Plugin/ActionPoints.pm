@@ -83,7 +83,7 @@ sub break_point_delete {
 sub break_point_subroutine {
   my($req, $context) = @_;
   my($filename, $start, $end) = $DB::sub{$req->{subroutine}} =~ m/^(.+):(\d+)-(\d+)$/;
-  my $line = set_break_point($filename, $start);
+  my $line = set_break_point($filename, $start, $req->{condition});
   return $line ? { line => $line } : {};
 }
 

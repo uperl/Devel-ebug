@@ -462,6 +462,12 @@ with the full package name:
   my $line = $ebug->break_point_subroutine("main::add");
   $ebug->break_point_subroutine("Calc::fib");
 
+It takes an optional condition, as L</break_point> does, so that the
+program only stops when the condition is true. At that point the
+subroutine has just been called, so C<@_> holds its arguments:
+
+  $ebug->break_point_subroutine("Calc::fib", '$_[1] > 5');
+
 The return value is the line at which the break point is set.
 
 =head2 break_points
