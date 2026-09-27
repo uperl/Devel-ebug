@@ -109,20 +109,6 @@ sub DB {
 }
 
 sub initialise {
-  my $k      = String::Koremutake->new;
-  my $int    = $k->koremutake_to_integer($ENV{SECRET});
-  my $port   = 3141 + ($int % 1024);
-  my $server = IO::Socket::INET->new(
-    Listen    => 5,
-    LocalAddr => 'localhost',
-    LocalPort => $port,
-    Proto     => 'tcp',
-    ReuseAddr => 1,
-    Reuse     => 1,
-    )
-    || die $!;
-  $context->{socket} = $server->accept;
-
   foreach my $plugin (__PACKAGE__->plugins) {
     my $sub = $plugin->can("register_commands");
     next unless $sub;
@@ -132,7 +118,61 @@ sub initialise {
     }
   }
 
+  # Started by Devel::ebug's load(): connect back to the port the frontend
+  # is listening on, which the OS chose for it, so there is nothing to
+  # collide with.  Announce ourselves with the secret, so the frontend can
+  # tell us apart from anything else that connects to it.
+  if (my $port = delete $ENV{DEVEL_EBUG_CONNECT}) {
+    my $socket = IO::Socket::INET->new(
+      PeerAddr => 'localhost',
+      PeerPort => $port,
+      Proto    => 'tcp',
+    ) || die "Devel::ebug::Backend: could not connect to the frontend on port $port: $!";
+    local $\; # if we run under perl -l the following line would get mangled
+    $socket->print("$ENV{SECRET}\n");
+    $context->{socket} = $socket;
+    exit unless handshake();
+  }
+
+  # Otherwise wait for a frontend to attach (ebug_server, or anything
+  # calling Devel::ebug's attach()), on a port derived from the secret.
+  else {
+    my $k      = String::Koremutake->new;
+    my $int    = $k->koremutake_to_integer($ENV{SECRET});
+    my $port   = 3141 + ($int % 1024);
+    my $server = IO::Socket::INET->new(
+      Listen    => 5,
+      LocalAddr => 'localhost',
+      LocalPort => $port,
+      Proto     => 'tcp',
+      ReuseAddr => 1,
+      Reuse     => 1,
+      )
+      || die "Devel::ebug::Backend: could not listen on port $port: $!";
+
+    # A frontend with the wrong secret, for example one of another session
+    # whose port happens to collide with ours, is turned away rather than
+    # ending this session.
+    while (1) {
+      $context->{socket} = $server->accept;
+      last if handshake();
+      close delete $context->{socket};
+    }
+  }
+
   $context->{initialise} = 0;
+}
+
+# The first request on a connection must be a ping carrying our secret.
+# Returns false, without answering, if it is anything else.
+sub handshake {
+  my $req = eval { read_request() };
+  return 0 unless $req
+    && ($req->{command} || '') eq 'ping'
+    && defined $req->{secret}
+    && $req->{secret} eq $ENV{SECRET};
+  put($commands{ping}->{sub}->($req, $context));
+  return 1;
 }
 
 sub put {
@@ -145,16 +185,22 @@ sub put {
 }
 
 sub get {
-  exit unless $context->{socket};
-  local $/= "\n";
-  my $data = $context->{socket}->getline;
+  my $req = read_request();
   # The frontend has gone away; that is how a session ends, not an error.
-  exit unless defined $data;
-  $context->{format} = Devel::ebug::Wire::detect($data);
-  my $req = Devel::ebug::Wire::decode($context->{format}, $data);
+  exit unless $req;
   push @{ $context->{history} }, $req
     if exists $commands{ $req->{command} }->{record};
   return $req;
+}
+
+# Read and decode one request, or return undef if the connection is closed.
+sub read_request {
+  return undef unless $context->{socket};
+  local $/= "\n";
+  my $data = $context->{socket}->getline;
+  return undef unless defined $data;
+  $context->{format} = Devel::ebug::Wire::detect($data);
+  return Devel::ebug::Wire::decode($context->{format}, $data);
 }
 
 sub sub {

@@ -6,6 +6,7 @@ use Carp;
 use Class::Accessor::Chained::Fast;
 use Devel::StackTrace 2.00;
 use Devel::ebug::Wire;
+use IO::Select;
 use IO::Socket::INET;
 use Proc::Background;
 use String::Koremutake;
@@ -43,11 +44,19 @@ sub load {
   eval { $_->import } for $self->plugins;
 
   my $k = String::Koremutake->new;
-  my $rand = int(rand(100_000));
-  my $secret = $k->integer_to_koremutake($rand);
-  my $port   = 3141 + ($rand % 1024);
+  my $secret = $k->integer_to_koremutake(int(rand(100_000)));
+
+  # Listen on a port of the OS's choosing and have the backend connect back
+  # to it, so that concurrent sessions can never collide over a port.
+  my $listener = IO::Socket::INET->new(
+    Listen    => 1,
+    LocalAddr => 'localhost',
+    LocalPort => 0,
+    Proto     => 'tcp',
+  ) || croak "Devel::ebug: could not listen for the backend: $!";
 
   $ENV{SECRET} = $secret;
+  $ENV{DEVEL_EBUG_CONNECT} = $listener->sockport;
   # With args the command is run as a list, so they reach the program
   # verbatim instead of being split and interpolated by the shell.
   my @command;
@@ -65,8 +74,38 @@ sub load {
   croak(qq{Devel::ebug: Failed to start up "$program" in load()}) unless $proc->alive;
   $self->proc($proc);
   $ENV{SECRET} = "";
+  delete $ENV{DEVEL_EBUG_CONNECT};
 
-  $self->attach($port, $secret);
+  $self->socket($self->_accept_backend($listener, $secret));
+  close $listener;
+
+  $self->_handshake($secret);
+}
+
+# Wait for the backend we just started to connect back.  It announces
+# itself by sending the secret, and anything else that connects to the
+# listening port is turned away.
+sub _accept_backend {
+  my($self, $listener, $secret) = @_;
+  my $program  = $self->program;
+  my $select   = IO::Select->new($listener);
+  my $deadline = time + 30;
+
+  while (time < $deadline) {
+    croak(qq{Devel::ebug: "$program" exited before the debugger could connect to it})
+      unless $self->proc->alive;
+    next unless $select->can_read(0.1);
+    my $socket = $listener->accept or next;
+    my $line = IO::Select->new($socket)->can_read(5) ? $socket->getline : undef;
+    if (defined $line) {
+      $line =~ s/\r?\n\z//;
+      return $socket if $line eq $secret;
+    }
+    close $socket;
+  }
+
+  croak(qq{Devel::ebug: timed out waiting for "$program" to connect to the debugger; }
+    . qq{is an older Devel::ebug::Backend being loaded that does not support DEVEL_EBUG_CONNECT?});
 }
 
 sub attach {
@@ -90,12 +129,23 @@ sub attach {
     die "Could not connect: $!" unless $socket;
     $self->socket($socket);
 
+    $self->_handshake($key, $port);
+}
+
+sub _handshake {
+    my ($self, $key, $port) = @_;
+
     my $response = $self->talk(
         {   command => "ping",
             version => $Devel::ebug::VERSION,
             secret  => $key,
         }
     );
+    unless ($response) {
+        die "The debugger did not answer the handshake"
+          . (defined $port ? " on port $port; the key may be wrong, or the port may belong to another session" : "")
+          . "\n";
+    }
     my $version = $response->{version};
     die "Client version $version != our version $Devel::ebug::VERSION"
         unless do { no warnings 'uninitialized'; $version eq $Devel::ebug::VERSION };
@@ -220,12 +270,22 @@ L<Devel::ebug> is a work in progress.
 Internally, L<Devel::ebug> consists of two parts. The frontend is
 L<Devel::ebug>, which you interact with. The frontend starts the code
 you are debugging in the background under the backend (running it
-under perl -d:ebug code.pl). The backend starts a TCP server, which
-the frontend then connects to, and uses this to drive the
-backend. This adds some flexibility in the debugger. There is some
-minor security in the client/server startup (a secret word), and a
-random port is used from 3141-4165 so that multiple debugging sessions
-can happen concurrently.
+under perl -d:ebug code.pl), and the two talk over a TCP socket on
+localhost, which the frontend uses to drive the backend. This adds some
+flexibility in the debugger.
+
+When L</load> starts the program, the frontend listens on a port chosen
+by the operating system and passes it to the backend in the
+C<DEVEL_EBUG_CONNECT> environment variable, along with a random secret
+word in C<SECRET>. The backend connects back to that port and sends the
+secret before anything else, so the frontend can tell it apart from
+anything else that connects. Because the port is chosen by the operating
+system, any number of debugging sessions can run concurrently.
+
+Without C<DEVEL_EBUG_CONNECT>, the backend instead listens on a port from
+3141-4165 derived from the secret, and waits for a frontend to attach
+with that secret, as L<ebug_server> and L<ebug_client> do. A frontend
+with the wrong secret is turned away without ending the session.
 
 =head1 CONSTRUCTOR
 

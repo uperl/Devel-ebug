@@ -13,6 +13,13 @@ Revision history for {{$dist->name}}
     metacharacters: add an `args` attribute to Devel::ebug, and have
     ebug and ebug_server use it when given more than one argument
     (gh#31, gh#60)
+  - Have the backend started by load() connect back to a port the
+    frontend got from the operating system, passed in the new
+    DEVEL_EBUG_CONNECT environment variable, so concurrent sessions can
+    no longer collide over a port; this also makes load() about a
+    second faster.  A backend waiting for a frontend to attach (as under
+    ebug_server) now turns away a frontend with the wrong secret instead
+    of dying, which could kill an unrelated session (gh#62)
 
 0.65      2026-09-21 19:55:44 -0600
   - Fix ^C (SIGINT) while running killing the console instead of
