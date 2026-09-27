@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.66      2026-09-26 21:30:13 -0600
   - Add an optional JSON wire format, selected with the `serializer`
     attribute or the DEVEL_EBUG_SERIALIZER environment variable, so that
     frontends which are not written in Perl can speak the protocol
