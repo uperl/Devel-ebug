@@ -179,6 +179,12 @@ $ebug->load;
 
 # METHODS
 
+If the program being debugged goes away without the debugger's help, for
+example because it was killed, crashed in XS code or called
+`POSIX::_exit`, any method that talks to it croaks with an error that
+begins `Devel::ebug: lost the connection to the debugger`. For a program
+started with ["load"](#load), the error also says how it ended.
+
 ## break\_point
 
 The break\_point method sets a break point in a program. If you are
