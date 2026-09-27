@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.67      2026-09-26 22:00:23 -0600
   - break_point_subroutine() takes an optional condition, like
     break_point(), and the ebug console accepts one after a subroutine
     name (b Calc::fib $_[1] > 5).  The condition is checked as the
