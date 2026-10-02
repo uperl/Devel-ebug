@@ -666,6 +666,8 @@ Brock Wilcox <awwaiid@thelackthereof.org>
 
 Taisuke Yamada
 
+Richard Leach (HYDAHY)
+
 # COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2005-2026 by Leon Brocard.
