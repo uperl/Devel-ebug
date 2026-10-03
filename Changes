@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Fix the NAME section of ebug_server's documentation, which
+    said ebug_client (gh#73)
 
 0.68      2026-10-02 01:44:26 -0600
   - Test fixes, no functional changes.  (gh#71, gh#72, richardleach++)
