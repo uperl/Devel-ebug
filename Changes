@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.69      2026-10-03 11:56:42 -0600
   - Fix a custom backend with backslashes in its path (such as
     C:\Strawberry\perl\bin\perl.exe) failing to start on Windows
     when args() is used (gh#74)
