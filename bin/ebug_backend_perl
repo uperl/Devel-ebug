@@ -14,5 +14,13 @@ L<Devel::ebug>
 
 =cut
 
+# On Windows exec starts a new process and exits this one, so the frontend
+# would see the process it started die before the backend connects.  Wait
+# for the backend instead, and exit with its status.
+if ($^O eq 'MSWin32') {
+  system $^X, "-d:ebug::Backend", @ARGV;
+  exit($? == -1 ? 255 : $? >> 8);
+}
+
 exec $^X, "-d:ebug::Backend", @ARGV;
 
