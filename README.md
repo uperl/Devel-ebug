@@ -1,4 +1,4 @@
-# Devel::ebug ![static](https://github.com/uperl/Devel-ebug/workflows/static/badge.svg) ![linux](https://github.com/uperl/Devel-ebug/workflows/linux/badge.svg)
+# Devel::ebug ![static](https://github.com/uperl/Devel-ebug/workflows/static/badge.svg) ![linux](https://github.com/uperl/Devel-ebug/workflows/linux/badge.svg) ![windows](https://github.com/uperl/Devel-ebug/workflows/windows/badge.svg)
 
 A simple, extensible Perl debugger
 
